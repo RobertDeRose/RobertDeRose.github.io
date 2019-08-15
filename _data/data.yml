@@ -4,7 +4,7 @@ bio:
   avatar: rderose.png
   email: RobertDeRose@gmail.com
   telephone: 609.377.4058
-  website: RobertDeRose.github.com
+  website: RobertDeRose.github.io
   linkedin: RobertDeRose
   github: RobertDeRose
   gitlab: RobertDeRose
@@ -17,14 +17,14 @@ summary:
     If you are searching for a Software Engineer that is passionate about
     technology and is a proven problem solver, then look no further. I have been
     teaching myself programming technologies since I was 12 years old. I started
-    with C++, and I am now proficient in over a dozen of languages and numerous
+    with C++, and I am now proficient in over a dozen languages and numerous
     web and automation technologies.
 
     I consider myself to be a Polyglot Programmer, but my go to languages are
     Java, Python, Bash and JavaScript. I have a deep understanding of
     programming fundamentals for the entire product life cycle. From design to
-    deployment, no matter what the language requirements are, I would be an
-    asset.
+    deployment, no matter what the language requirements, I would be an
+    asset to your organization.
 
 history:
   title: Experience
@@ -53,9 +53,9 @@ history:
           of the MCSJ Software.
           <div class="d-print-none" markdown="1">
             <ul>
-              <li>Used to install multiple services to support running against multiple databases</li>
+              <li>Used to install multiple services to support running against multiple instances</li>
                 <ul>
-                  <li>Multi tenant solution for AWS Windows instances</li>
+                  <li>Multi-tenant solution for AWS Windows instances</li>
                   <li>Training and archive databases for on-premise installs</li>
                 </ul>
               <li>Used to upgrade previous versions of the software to the latest version</li>
@@ -122,7 +122,7 @@ history:
           </div>
         * Maintained Jenkins Server to support automated testing and code quality
           - Ingetrated into Github Enterprise
-          - PRs can't be merged until all pipelines pass
+            - PRs can't be merged until all pipelines pass
       technologies:
         - name: ColdFusion
         - name: Python
