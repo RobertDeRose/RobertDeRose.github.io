@@ -26,8 +26,8 @@
           {% if bio.twitter %}
           <li class="mb-3"><a href="https://twitter.com/@{{ bio.twitter }}"><span class="fa-container text-center mr-2"><i class="fab fa-twitter fa-fw"></i></span>@{{ bio.twitter }}</a></li>
           {% endif %}
-          {% if bio.website %}
-          <li><a href="http://www.{{ bio.website }}"><span class="fa-container text-center mr-2"><i class="fas fa-globe"></i></span>{{ bio.website }}</a></li>
+          {% if bio.stackoverflow%}
+          <li><a href="https://stackoverflow.com/users/{{ bio.stackoverflow }}"><span class="fa-container text-center mr-2"><i class="fab fa-stack-overflow"></i></span>{{ bio.stackoverflow }}</a></li>
           {% endif %}
         </ul>
       </div><!--//secondary-info-->
