@@ -1,0 +1,260 @@
+bio:
+  name: Robert DeRose
+  title: Polyglot Software Engineer
+  avatar: rderose.png
+  email: RobertDeRose@gmail.com
+  telephone: 609.377.4058
+  website: RobertDeRose.github.com
+  linkedin: RobertDeRose
+  github: RobertDeRose
+  gitlab: RobertDeRose
+  twitter: RobertDeRose
+
+summary:
+  title: Profile
+  description: |
+    If you are searching for a Software Engineer that is passionate about
+    technology and is a proven problem solver, then look no further. I have been
+    teaching myself programming technologies since I was 12 years old. I started
+    with C++, and I am now proficient in over a dozen of languages and numerous
+    web and automation technologies.
+
+    I consider myself to be a Polyglot Programmer, but my go to languages are
+    Java, Python, Bash and JavaScript. I have a deep understanding of
+    programming fundamentals for the entire product life cycle. From design to
+    deployment, no matter what the language requirements are, I would be an
+    asset.
+
+history:
+  title: Experience
+  roles:
+    - position: Senior Software Engineer
+      company: Edmunds GovTech
+      location: Northfield, NJ
+      time: 2018 - Present
+      description: |
+        * Leading a team of three developers to integrate [Orbeon Forms](https://www.orbeon.com) into MCSJ
+        * Developed a system to automatically compute and apply database schema changes.
+          <div class="d-print-none" markdown="1">
+            <ul>
+              <li>Reads from a versioned excel file used to track schema changes between major releases</li>
+              <li>Transparently supports three databases; MySQL, MS-SQL, and Actian Zen (PSQL)</li>
+              <li>Automatically finds new, changed and removed tables, columns and indexes</li>
+              <li>Supports custom migrations written in Java or SQL</li>
+                <ul>
+                  <li>i.e. Computing values for new columns from previous database versions</li>
+                </ul>
+              <li>Supports pre-flight checks and post-flight checks</li>
+              <li>Supports applying multiple schema update sequencially</li>
+            </ul>
+          </div>
+        * Developed a JavaFX application to install and manage Windows services
+          of the MCSJ Software.
+          <div class="d-print-none" markdown="1">
+            <ul>
+              <li>Used to install multiple services to support running against multiple databases</li>
+                <ul>
+                  <li>Multi tenant solution for AWS Windows instances</li>
+                  <li>Training and archive databases for on-premise installs</li>
+                </ul>
+              <li>Used to upgrade previous versions of the software to the latest version</li>
+              <li>Used to upgrade database schema after new software versions are installed</li>
+            </ul>
+          </div>
+        * Wrote Bash script to intelligently convert entire code based that was only using
+          `System.*.println` statements to use the [Log4j2](https://logging.apache.org/log4j/2.x/)
+           logging system making use of the proper `error`, `warn`, `info`, and `debug` convention
+           through code context analysis
+        * Pushed for and implemented conversion from Subversion to Git for all code
+          <div class="d-print-none" markdown="1">
+            <ul>
+              <li>Maintained all Subversion history in new Git repo and proper author mapping</li>
+              <li>Setup and manage Gitlab hosting for newly converted git projects</li>
+              <li>Setup Gitlab CI/CD to automate building and packaging</li>
+              <li>Integrated Gitlab with Microsoft Teams and JIRA</li>
+              <li>Wrote extensive documentation to help all developers get up to speed with Git and Gitlab</li>
+            </ul>
+          </div>
+      technologies:
+        - name: Java
+        - name: Bash
+        - name: Gitlab CI/CD
+        - name: AWS SQS
+        - name: Tomcat
+        - name: Orbeon Forms
+        - name: MySQL
+        - name: MS SQL
+
+    - position: Developer
+      # page_break: true
+      company: Linode, Inc
+      location: Galloway, NJ
+      time: 2015 - 2018
+      description: |
+        * Developed microservices in Python using Flask and SQLAlchemy
+          - SUDS (Secure User Data Service)
+            - Separate microservice to store user's password and two-factor secret using only an UUID
+              to link users between services
+            - Custom PAM module written in Python to allow users to SSH into Linode's management console
+          - OAuth 2.0 Server
+            - Integrated with SUDS
+            - Supports Customer Application, Personal Access Tokens, Implicit and Explicit authentication methods
+          - [Linode API v4](https://developers.linode.com/api/v4/)
+            - Pushed for and implemented [OpenAPI 3 specification](https://developers.linode.com/api/docs/v4/openapi.yaml)
+            - RESTful
+          - BAPI (Backend-API)
+            - Used for internal services only, such as provisioning Block Storage Volumes
+        * Maintained and Optimized Developer Stack using Vagrant & SaltStack then Docker Compose
+          - The Linode Developer stack replicated the entire Linode Stack on a Developer's Laptop
+          <div class="d-print-none" markdown="1">
+            <ul>
+              <li>Version 1 used Vagrant and VMs</li>
+                <ul>
+                  <li>Could even spin up Linode VM inside a simulated host VM</li>
+                </ul>
+              <li>Version 2 used Docker Compose</li>
+                <ul>
+                  <li>Primarily for Front-end development, lighter weight, couldn't spin up Linode VMs</li>
+                  <li>Much smaller provision scripts, no need for SaltStack</li>
+                </ul>
+            </ul>
+          </div>
+        * Maintained Jenkins Server to support automated testing and code quality
+          - Ingetrated into Github Enterprise
+          - PRs can't be merged until all pipelines pass
+      technologies:
+        - name: ColdFusion
+        - name: Python
+        - name: Flask
+        - name: SQLAlchemy
+        - name: Bash
+        - name: Docker
+        - name: Vagrant
+        - name: SaltStack
+
+    - position: Software Engineer
+      company: Mitel (formerly Ulticom, Inc)
+      location: Mount Laurel, NJ
+      time: 2011 - 2015
+      description: |
+        * Using Cisco's NCS Platform worked with a team that developed a distributed, fault-tolerant
+          Diameter Signaling Controller (DSC)
+        * Integrated MongoDB into DSC platform to provide dynamic routing rules
+        * Developed SOAP and REST API Servlets to allow access to the MongoDB integration
+          - Used Apache CXF for SOAP and Jersey for REST
+        * Integrated Jetty into DSC to host SOAP and REST Servlets
+        * Developed and integrated into DSC a metrics collections system using MySQL, Hibernate, & Google ProtoBufs
+      technologies:
+        - name: JavaScript
+        - name: Java
+        - name: Jetty
+        - name: MongoDB
+        - name: MySQL
+        - name: OpenStack
+
+    - position: Software Engineer (Intern)
+      company: Amazon.com
+      location: Seattle, WA
+      time: 2009 - 2010
+      description: |
+        * Developed Email IP Reputation System for use with AWS Simple Email Service
+          - Used Spring, Hibernate and AWS RDS
+          - Used to monitor if emails are being marked as Junk by mail providers, thus lowering
+            IP reputation of Amazon's MTAs
+      technologies:
+        - name: Java
+        - name: Hibernate
+        - name: AWS RDS
+        - name: Ruby
+
+      # achivements: |
+      #   Hi-lights here
+      #   * Thing 1
+      #   * Thing 2
+      #     - Sub Thing 1
+
+
+skills:
+  frontend:
+    - name: JavaScript
+      percentage: 70
+    - name: HTML5
+      percentage: 60
+    - name: Sass
+      percentage: 50
+  backend:
+    - name: Java 8
+      percentage: 100
+    - name: Bash
+      percentage: 95
+    - name: Python
+      percentage: 80
+    - name: Flask &amp; SQLAlchemy
+      percentage: 80
+    - name: Ruby
+      percentage: 50
+    - name: Go
+      percentage: 15
+    - name: Elixir
+      percentage: 10
+    - name: C/C++
+      percentage: 5
+    - name: Excel with VB Script
+      percentage: 5
+
+  other:
+    - name: Linux (Debian &amp; Fedora variants)
+    - name: macOS
+    - name: Windows 10
+    - name: InDesign
+    - name: Illustrator
+    - name: JIRA
+    - name: Scrum
+    - name: Docker
+    - name: Vagrant
+
+education:
+  - degree: BS in Computer Engineering
+    name: Drexel University
+    time: 2008 - 2012
+    gpa: 3.56
+
+awards:
+  # - name: Chilli Champion 2017
+  #   description: |
+  #     The Annual Linode Chilli competition
+  # - name: Best Coder Ever 2019
+  #   description: Awarded by my fellow coworkers
+
+languages:
+  - name: English
+    proficiency: Native
+
+interests:
+  - name: Home Automation
+    icon: fas fa-home
+  - name: Voluneteering
+    icon: fas fa-hand-holding-heart
+  - name: Cycling
+    icon: fas fa-biking
+
+
+organizations:
+  - name: Hammonton Rotary
+    link: http://www.hammontonrotary.org
+    date: 2004
+
+  - name: Hammonton Mainstreet
+    link: https://www.downtownhammonton.com
+    date: 2011
+
+  - name: Hammonton Makers
+    link: http://www.hammontonmakers.org
+    date: 2014
+
+  - name: Hammonton Bicycle Advisory Committee
+    date: 2015
+
+  - name: South Jersey Tech Meetup
+    link: https://www.meetup.com/sjtechmeetup/
+    date: 2017
