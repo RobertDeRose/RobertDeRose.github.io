@@ -7,7 +7,7 @@
       {% for award in awards %}
       <li class="position-relative">
         <i class="resume-award-icon fas fa-trophy position-absolute" data-fa-transform="shrink-2"></i>
-        <div class="resume-award-name">{{ award.name }}</div>
+        <div class="resume-award-name pl-4">{{ award.name }}</div>
         <div class="resume-award-desc">{{ award.description | markdownify }}</div>
       </li>
       {% endfor %}
