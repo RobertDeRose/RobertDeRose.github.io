@@ -7,9 +7,16 @@
       {% for grad in education %}
       <li class="mb-2">
         <div class="resume-degree font-weight-bold">{{ grad.degree }}</div>
-        <div class="resume-degree-org">{{ grad.name }}</div>
+        <div class="resume-degree-org">{{ grad.name }}
+        </div>
         <div class="resume-degree-time">{{ grad.time }}
-          <span style="float:right">GPA: {{ grad.gpa }}</span>
+          {% if grad.gpa %}
+          <span style="float:right">{{ grad.gpa }}
+            {% if grad.honors %}
+            <span style="font-style: italic; font-size: 0.65rem;">({{ grad.honors }})</span>
+            {% endif %}
+          </span>
+          {% endif %}
         </div>
       </li>
       {% endfor %}
