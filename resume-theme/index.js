@@ -78,7 +78,7 @@ function header(b = {}, rules = []) {
   ].filter(Boolean);
   return `
   <header class="top">
-    <div class="photo"><span>${b.image ? `<img id="avatar" src="${esc(b.illustration || b.image)}" alt="${b.illustration ? "" : esc(b.name)}">${b.illustration ? `<img class="real" src="${esc(b.image)}" alt="${esc(b.name)}">` : ""}<canvas id="hexface" aria-hidden="true" title="Click to scatter"></canvas>` : `<b>${esc(initials(b.name))}</b>`}</span></div>
+    <div class="photo"><span>${b.image ? `<img id="avatar" src="${esc(b.image)}" alt=""><img class="real" src="${esc(b.image)}" alt="${esc(b.name)}"><canvas id="hexface" aria-hidden="true" title="Click to scatter"></canvas>` : `<b>${esc(initials(b.name))}</b>`}</span></div>
     <div class="id">
       <p class="label">${esc(b.label)}</p>
       <h1>${esc(b.name)}</h1>
@@ -190,7 +190,7 @@ a:hover { color: var(--accent); }
 .photo canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
 .photo.mosaic #avatar { opacity: 0; transition: opacity .4s; }
 .photo.mosaic.ready #avatar { opacity: 1; }
-/* With an illustration (basics.illustration), the mosaic is built from it and hovering fades to the real photo. */
+/* Hovering fades the hex mosaic to the plain photo. */
 .photo .real { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none; transition: opacity .5s; }
 .photo:hover .real, .photo:focus-within .real { opacity: 1; }
 .photo b { display: grid; place-items: center; height: 100%; font: 54px var(--display); letter-spacing: .02em; background: var(--brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
