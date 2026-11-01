@@ -41,7 +41,7 @@
         "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
         "Automated builds of CPython 3.11–3.15 Debian packages tuned with profile-guided optimization (PGO) and link-time optimization (LTO) for three Ubuntu LTS releases, standardizing Python across product lines",
         "Built a cross-platform device provisioning app in Python/Flet that configures devices offline over SSH",
-        "Made the standard the default: reusable Copier project templates give every new project the shared CI/CD, Debian packaging, and UI tooling from day one, including the FastAPI, SQLAlchemy, and Alembic REST service template behind Checkpoint's Readfinity Core RFID reader software"
+        "Made the standard the default: reusable Copier project templates give every new project the shared CI/CD, Debian packaging, and UI tooling from day one, including the REST service template behind Checkpoint's Readfinity Core RFID reader software"
       ],
       "printHighlights": [
         "Replaced a 5-month, ~64K-line DDS prototype with Zenoh/MQTT in 2 weeks",
@@ -83,7 +83,7 @@
             "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
             "Automated builds of CPython 3.11–3.15 Debian packages tuned with profile-guided optimization (PGO) and link-time optimization (LTO) for three Ubuntu LTS releases, standardizing Python across product lines",
             "Built a cross-platform device provisioning app in Python/Flet that configures devices offline over SSH",
-            "Made the standard the default: reusable Copier project templates give every new project the shared CI/CD, Debian packaging, and UI tooling from day one, including the FastAPI, SQLAlchemy, and Alembic REST service template behind Checkpoint's Readfinity Core RFID reader software"
+            "Made the standard the default: reusable Copier project templates give every new project the shared CI/CD, Debian packaging, and UI tooling from day one, including the REST service template behind Checkpoint's Readfinity Core RFID reader software"
           ]
         }
       ]
