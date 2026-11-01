@@ -43,12 +43,21 @@ const marks = await page.evaluate(() => {
     return { key: el.dataset.c, x: box.left, y: box.top, width: end.getBoundingClientRect().left - box.left, size: parseFloat(style.fontSize), color: [r / 255, g / 255, b / 255] };
   });
 });
-const pdf = await page.pdf({ preferCSSPageSize: true, printBackground: true });
+const printed = await page.pdf({ preferCSSPageSize: true, printBackground: true });
 await browser.close();
 
 // Fail the build rather than publish a resume that spills onto a second page.
-const pages = (await PDFDocument.load(pdf)).getPageCount();
-if (pages !== 1) throw new Error(`dist/resume.pdf has ${pages} pages; trim the print content to fit one`);
+const doc = await PDFDocument.load(printed);
+if (doc.getPageCount() !== 1) throw new Error(`dist/resume.pdf has ${doc.getPageCount()} pages; trim the print content to fit one`);
+
+// Document properties a viewer or applicant tracking system shows, in place of headless Chrome's.
+const basics = JSON.parse(readFileSync("resume.json", "utf8")).basics || {};
+doc.setTitle(`${basics.name} · Resume`, { showInWindowTitleBar: true });
+doc.setAuthor(basics.name);
+if (basics.label) doc.setSubject(basics.label);
+doc.setCreator(basics.url || basics.name);
+doc.setProducer("Chrome and pdf-lib");
+const pdf = await doc.save({ updateFieldAppearances: false });
 
 const layout = {
   slots: marks.map((m) => ({

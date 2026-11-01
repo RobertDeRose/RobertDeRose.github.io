@@ -64,6 +64,10 @@
   .hex:hover, .hex:focus-visible { transform: scale(1.08); outline: none; }
   .hex:hover > span, .hex:focus-visible > span { background: color-mix(in srgb, var(--hc) 24%, var(--tile)); }
   .hex:hover img { transform: rotate(-10deg) scale(1.1); }
+  .hex.me { cursor: default; }
+  .hex.me > span { padding: 0; background: var(--tile); }
+  .hex.me img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+  .hex.me:hover img { transform: scale(1.06); }
   .hint { position: absolute; right: max(24px, env(safe-area-inset-right)); bottom: 80px; font: 14px var(--mono); color: var(--muted); display: flex; gap: 10px; }
   .hint i { font-style: normal; animation: nudge 1.4s ease-in-out infinite; }
   @keyframes nudge { 50% { transform: translateX(8px); } }
@@ -125,7 +129,8 @@ track.insertAdjacentHTML("beforeend", P.map((p, i) => `
     </div>
   </div>`).join(""));
 const tile = (p, i) => `<button class="hex" type="button" data-i="${i + 1}" style="--hc:${p.c}"><span><img src="${p.img}" alt=""><b>${p.name}</b></span></button>`;
-comb.innerHTML = `<div class="r">${P.slice(0, 2).map((p, i) => tile(p, i)).join("")}</div><div class="r">${P.slice(2).map((p, i) => tile(p, i + 2)).join("")}</div>`;
+// The comb is a pyramid: the portrait on top, then the projects in rows of two and three.
+comb.innerHTML = `<div class="r"><div class="hex me" style="--hc:#ef4b5f"><span><img src="img/robborg.webp" alt="Robert DeRose, illustrated as a cyborg"></span></div></div><div class="r">${P.slice(0, 2).map((p, i) => tile(p, i)).join("")}</div><div class="r">${P.slice(2).map((p, i) => tile(p, i + 2)).join("")}</div>`;
 rail.innerHTML = ["About", ...P.map(p => p.name)].map((n, i) => `<button type="button" data-i="${i}">${n}</button>`).join("");
 const panels = [...track.children], btns = [...rail.children];
 const colors = ["#6f9cff", ...P.map(p => p.c)];

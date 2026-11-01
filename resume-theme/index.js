@@ -78,7 +78,7 @@ function header(b = {}, rules = []) {
   ].filter(Boolean);
   return `
   <header class="top">
-    <div class="photo"><span>${b.image ? `<img id="avatar" src="${esc(b.image)}" alt="${esc(b.name)}"><canvas id="hexface" aria-hidden="true" title="Click to scatter"></canvas>` : `<b>${esc(initials(b.name))}</b>`}</span></div>
+    <div class="photo"><span>${b.image ? `<img id="avatar" src="${esc(b.illustration || b.image)}" alt="${b.illustration ? "" : esc(b.name)}">${b.illustration ? `<img class="real" src="${esc(b.image)}" alt="${esc(b.name)}">` : ""}<canvas id="hexface" aria-hidden="true" title="Click to scatter"></canvas>` : `<b>${esc(initials(b.name))}</b>`}</span></div>
     <div class="id">
       <p class="label">${esc(b.label)}</p>
       <h1>${esc(b.name)}</h1>
@@ -89,7 +89,8 @@ function header(b = {}, rules = []) {
       ${b.url ? `<a class="btn ghost" href="${esc(b.url)}">Projects</a>` : ""}
     </div>
   </header>
-  ${b.summary ? `<div class="summary">${paras(b.summary)}</div>` : ""}`;
+  ${b.summary ? `<div class="summary${b.printSummary ? " web-only" : ""}">${paras(b.summary)}</div>` : ""}
+  ${b.printSummary ? `<div class="summary print-only">${paras(b.printSummary)}</div>` : ""}`;
 }
 
 const work = (items = []) =>
@@ -97,11 +98,12 @@ const work = (items = []) =>
     .map(
       (w) => `
     <article class="job">
-      <div class="when">${range(w.startDate, w.endDate)}${(w.printHighlights || []).some((h) => h.preAI) ? `<span class="key print-only"> · <i class="hx"></i> built before AI coding agents</span>` : ""}</div>
+      <div class="when">${range(w.startDate, w.endDate)}</div>
       <h3>${esc(w.position)} <span>${w.url ? `<a href="${esc(w.url)}">${esc(w.name)}</a>` : esc(w.name)}</span></h3>
       ${w.location ? `<div class="where">${esc(w.location)}</div>` : ""}
       ${w.summary ? `<p>${esc(w.summary)}</p>` : ""}
       ${w.printHighlights ? webBullets(w) + printBullets(w.printHighlights) : list(w.highlights)}
+      ${(w.printHighlights || []).some((h) => h.preAI) ? `<p class="key print-only"><i class="hx"></i> Built before AI coding agents</p>` : ""}
     </article>`,
     )
     .join("");
@@ -186,8 +188,11 @@ a:hover { color: var(--accent); }
 .photo span { position: relative; }
 .photo img { width: 100%; height: 100%; object-fit: cover; }
 .photo canvas { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; }
-.photo.mosaic img { opacity: 0; transition: opacity .4s; }
-.photo.mosaic.ready img { opacity: 1; }
+.photo.mosaic #avatar { opacity: 0; transition: opacity .4s; }
+.photo.mosaic.ready #avatar { opacity: 1; }
+/* With an illustration (basics.illustration), the mosaic is built from it and hovering fades to the real photo. */
+.photo .real { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: cover; opacity: 0; pointer-events: none; transition: opacity .5s; }
+.photo:hover .real, .photo:focus-within .real { opacity: 1; }
 .photo b { display: grid; place-items: center; height: 100%; font: 54px var(--display); letter-spacing: .02em; background: var(--brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .label { font: 500 13px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin: 0; }
 h1 { font: clamp(52px, 8vw, 104px)/.88 var(--display); text-transform: uppercase; margin: 6px 0 14px; letter-spacing: .005em; }
@@ -269,10 +274,10 @@ aside .tags { margin-top: 8px; }
   body { font-size: 9.4pt; line-height: 1.33; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   canvas, .actions, .reveal { display: none; }
   .pc { display: inline; }
-  .photo.mosaic img { opacity: 1; transition: none; }
+  .photo.mosaic #avatar { opacity: 1; transition: none; }
   .page { padding: 0; max-width: none; }
-  .top { grid-template-columns: auto 1fr; gap: 18px; }
-  .photo { --w: 74px; }
+  .top { grid-template-columns: 1fr; gap: 18px; }
+  .photo { display: none; }
   .photo b { font-size: 30pt; }
   h1 { font-size: 40pt; margin: 2px 0 6px; }
   .label { font-size: 8pt; }
@@ -288,7 +293,7 @@ aside .tags { margin-top: 8px; }
   .job { padding-bottom: 9px; }
   .web-only { display: none; }
   .print-only { display: block; }
-  .when .key { display: inline; }
+  .job p.key { margin: 2px 0 0; font: 7.5pt var(--mono); color: var(--muted); }
   .contact .print-only { display: inline; }
   /* The PDF build lays contact details out but leaves them blank; the download button writes them in. */
   .pdf-build .pc { visibility: hidden; }
@@ -317,7 +322,7 @@ aside .tags { margin-top: 8px; }
   .picks h3 { font-size: 9.5pt; }
   .picks h3 a { color: var(--fg); }
   .picks p { font-size: 8.5pt; }
-  .picks ul { margin: 1px 0 0; padding-left: 11px; font-size: 8.3pt; line-height: 1.3; color: var(--muted); }
+  .picks ul { margin: 1px 0 0; padding-left: 11px; font-size: 8.3pt; line-height: 1.3; color: var(--soft); }
   .picks li li { padding: 0; margin: 0 0 1px; }
   .picks li li::before { display: none; }
   .picks li li::marker { color: var(--pc); }
@@ -440,6 +445,7 @@ const HEXFACE = `
     for (let r = 0; r * ch < H + R; r++) for (let c = 0; c * cw < W + cw; c++) {
       const x = c * cw + (r & 1 ? cw / 2 : 0), y = r * ch;
       const i = (Math.min(H - 1, Math.round(y)) * W + Math.min(W - 1, Math.round(x))) * 4;
+      if (px[i + 3] < 40) continue; // transparent parts of the image stay background
       cells.push({ x, y, col: "rgb(" + px[i] + "," + px[i + 1] + "," + px[i + 2] + ")", sx: 0, sy: 0, rot: 0, delay: 0, k: 1 });
     }
     scatter(true);

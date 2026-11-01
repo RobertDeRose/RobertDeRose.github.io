@@ -6,7 +6,8 @@
 // passes the vendored globals and Node passes the npm modules.
 export async function stampContact(lib, pdfBytes, fontBytes, layout, contact) {
   const { PDFDocument, PDFString, rgb, setCharacterSpacing, fontkit } = lib;
-  const doc = await PDFDocument.load(pdfBytes);
+  // Keep the document properties the build set (title, author) instead of pdf-lib's defaults.
+  const doc = await PDFDocument.load(pdfBytes, { updateMetadata: false });
   doc.registerFontkit(fontkit);
   const font = await doc.embedFont(fontBytes, { subset: true });
   const page = doc.getPage(0);

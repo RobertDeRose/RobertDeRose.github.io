@@ -2,9 +2,10 @@
   "basics": {
     "name": "Robert DeRose",
     "label": "Systems & Platform Engineering | Embedded Linux & IoT",
-    "image": "img/avatar.png",
+    "image": "img/avatar.webp",
+    "illustration": "img/robborg.webp",
     "url": "https://robertderose.github.io",
-    "summary": "I build the software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD that ships it. Shipping software since 2009 in Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nFor 3 years I've been the sole engineer behind SFERO, Checkpoint's best-selling new product (now on 5,000+ devices), and the CI/CD the whole company ships on. Since 2025 I've worked agent-first with models from Anthropic and OpenAI, using spec-driven development and Beads. Working this way, I made a ~64K-line custom DDS messaging prototype unnecessary by packaging Zenoh with an MQTT bridge in ~2 weeks.",
+    "summary": "I build software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD to ship it. Shipping code since 2009 in Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nFor 3 years I've been the sole engineer behind SFERO, Checkpoint's best-selling new product (now on 5,000+ devices), and the CI/CD the whole company ships on. Since 2025 I've worked agent-first with models from Anthropic and OpenAI, using spec-driven development and Beads. Working this way, I made a ~64K-line custom DDS messaging prototype unnecessary by packaging Zenoh with an MQTT bridge in ~2 weeks.",
     "profiles": [
       {
         "network": "LinkedIn",
@@ -16,7 +17,8 @@
         "username": "RobertDeRose",
         "url": "https://github.com/RobertDeRose"
       }
-    ]
+    ],
+    "printSummary": "I build software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD to ship it. Shipping code since 2009 in Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nSole engineer behind SFERO, Checkpoint's best-selling new product on 5,000+ devices, and the company's CI/CD. Working agent-first, I replaced a ~64K-line custom DDS prototype with Zenoh and an MQTT bridge in ~2 weeks."
   },
   "work": [
     {
