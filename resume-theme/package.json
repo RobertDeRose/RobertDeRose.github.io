@@ -1,0 +1,9 @@
+{
+  "name": "jsonresume-theme-hexways",
+  "version": "1.0.0",
+  "description": "JSON Resume theme matching the Hexways landing page: dark hex lattice on screen, clean light pages in print.",
+  "type": "module",
+  "main": "index.js",
+  "exports": "./index.js",
+  "private": true
+}

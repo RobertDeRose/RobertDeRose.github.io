@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "jsonresume-theme-hexways": "file:resume-theme",
+    "resumed": "^6.1.0"
+  }
+}

@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robert DeRose</title>
+<meta name="description" content="Robert DeRose, systems engineer. Open-source tools for Nix, embedded and IoT systems, and containers on macOS.">
+<meta name="theme-color" content="#070a10">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Red+Hat+Display:wght@400;500;900&family=Red+Hat+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: a fixed, reactive hex lattice; scrolling down slides project panels sideways across it */
+  :root {
+    --bg: #070a10; --fg: #eef2fa; --muted: #95a0b6; --tile: #0e1420;
+    --c: #6f9cff;
+    --display: Anton, Impact, sans-serif; --sans: "Red Hat Display", system-ui, sans-serif; --mono: "Red Hat Mono", ui-monospace, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 18px/1.55 var(--sans); }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  .story { height: 900vh; position: relative; z-index: 1; }
+  html { scroll-snap-type: y proximity; }
+  .snap { position: absolute; left: 0; width: 1px; height: 1px; scroll-snap-align: start; pointer-events: none; }
+  .sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  .track { display: flex; height: 100%; width: 600vw; will-change: transform; }
+  .panel { width: 100vw; height: 100%; flex: none; position: relative; display: grid; align-content: center; padding: 0 max(24px, env(safe-area-inset-right)) 64px max(24px, env(safe-area-inset-left)); overflow: hidden; }
+  .ghost { position: absolute; left: 0; bottom: -3vh; font: clamp(120px, 24vw, 360px)/.8 var(--display); color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--pc) 40%, transparent); white-space: nowrap; pointer-events: none; text-transform: uppercase; will-change: transform; }
+  .inner { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 5vw; align-items: center; max-width: 1200px; margin: 0 auto; width: 100%; }
+  .num { position: relative; z-index: 1; font: 500 13px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--pc); }
+  .panel h2 { font: clamp(48px, 7vw, 104px)/.9 var(--display); text-transform: uppercase; margin: 10px 0 18px; word-break: break-word; }
+  .panel p { max-width: 42ch; margin: 0 0 22px; color: #c9d0de; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
+  .tags span { border: 1px solid color-mix(in srgb, var(--pc) 60%, transparent); color: var(--pc); border-radius: 3px; padding: 1px 10px; font: 13px var(--mono); }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .cta a { background: var(--pc); color: #070a10; text-decoration: none; padding: 10px 20px; font: 500 15px var(--mono); clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%); transition: transform .2s; }
+  .cta a + a { background: #ffffff14; color: var(--fg); }
+  .cta a:hover { transform: translateY(-2px); }
+  .side { display: grid; justify-items: center; gap: 20px; }
+  .back { margin-top: 22px; padding: 0; background: none; border: 0; font: 14px var(--mono); color: var(--muted); cursor: pointer; text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); text-underline-offset: 4px; }
+  .back:hover, .back:focus-visible { color: var(--pc); text-decoration-color: currentColor; text-decoration-thickness: 2px; outline: none; }
+  .art { --w: min(30vw, 320px, 50vh); width: var(--w); height: calc(var(--w) * 1.1547); max-width: 100%; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: var(--pc); padding: 3px; will-change: transform; }
+  .art span { display: grid; place-items: center; width: 100%; height: 100%; clip-path: inherit; background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--pc) 28%, var(--tile)), var(--tile) 70%); }
+  .art img { width: 58%; height: 58%; object-fit: contain; }
+  /* Intro: name on the left, honeycomb index on the right */
+  .intro h1 { font: clamp(64px, 11vw, 170px)/.84 var(--display); text-transform: uppercase; margin: 0 0 22px; }
+  .intro h1 .outline { color: transparent; -webkit-text-stroke: 2px var(--fg); }
+  .intro h1 { position: relative; z-index: 5; cursor: default; user-select: none; }
+  .intro h1 .ch { display: inline-block; will-change: transform; }
+  .intro h1 .ch.settle { transition: transform .5s cubic-bezier(.2,.9,.3,1.3), opacity .4s; }
+  .intro p { font-size: clamp(18px, 1.8vw, 22px); max-width: 32ch; color: var(--muted); }
+  .intro nav { display: flex; gap: 20px; font: 15px var(--mono); }
+  .intro nav a { color: var(--fg); }
+  .comb { --w: min(140px, 12vw); --h: calc(var(--w) * 1.1547); display: flex; flex-direction: column; align-items: center; justify-self: center; }
+  .comb .r { display: flex; gap: 6px; }
+  .comb .r + .r { margin-top: calc(var(--h) * -.25 + 6px); }
+  .hex { width: var(--w); height: var(--h); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: var(--hc); padding: 2px; border: 0; cursor: pointer; font: inherit; color: inherit; transition: transform .35s cubic-bezier(.2,.9,.3,1.3); }
+  .hex > span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 100%; clip-path: inherit; background: var(--tile); padding: 0 12px; text-align: center; transition: background .3s; }
+  .hex img { width: 44%; height: 38%; object-fit: contain; transition: transform .4s; }
+  .hex b { font: 500 12px/1.15 var(--mono); word-break: break-word; }
+  .hex:hover, .hex:focus-visible { transform: scale(1.08); outline: none; }
+  .hex:hover > span, .hex:focus-visible > span { background: color-mix(in srgb, var(--hc) 24%, var(--tile)); }
+  .hex:hover img { transform: rotate(-10deg) scale(1.1); }
+  .hint { position: absolute; right: max(24px, env(safe-area-inset-right)); bottom: 80px; font: 14px var(--mono); color: var(--muted); display: flex; gap: 10px; }
+  .hint i { font-style: normal; animation: nudge 1.4s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: translateX(8px); } }
+  .rail { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; gap: 6px; padding: 0 max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+  .rail button { flex: 1; min-width: 0; font: 12px var(--mono); color: var(--muted); background: none; border: 0; border-top: 2px solid #ffffff22; padding: 8px 0 0; text-align: left; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .3s, border-color .3s; }
+  .rail button.on { color: var(--fg); border-top-color: var(--c); }
+  /* Narrow screens and reduced motion: an ordinary vertical page over the lattice. */
+  @media (max-width: 760px), (prefers-reduced-motion: reduce) {
+    html { scroll-snap-type: none; } .snap { display: none; }
+    .story { height: auto; } .sticky { position: static; height: auto; overflow: visible; }
+    .track { flex-direction: column; width: 100%; transform: none !important; }
+    .panel { width: 100%; padding-block: 64px; }
+    .inner { grid-template-columns: 1fr; }
+    .side { grid-row: 1; justify-items: start; gap: 0; }
+    .art { --w: 150px; transform: none !important; }
+    .comb { --w: min(120px, 28vw); justify-self: start; }
+    .ghost, .hint, .rail { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .hex, .hex img, .cta a { transition: none; } .hint i { animation: none; } }
+</style>
+</head>
+<body>
+<canvas id="c" aria-hidden="true"></canvas>
+<section class="story" id="story">
+  <div class="sticky"><div class="track" id="track">
+    <div class="panel intro" style="--pc:#6f9cff"><div class="inner">
+      <div><h1>Robert<br><span class="outline">DeRose</span></h1>
+        <p>I'm a systems engineer building open-source tools for Nix, embedded and IoT systems, and containers on macOS.</p>
+        <nav><a href="https://github.com/RobertDeRose">GitHub</a><a href="https://www.linkedin.com/in/RobertDeRose">LinkedIn</a><a href="resume.html">Resume</a></nav></div>
+      <div class="comb" id="comb"></div>
+    </div><div class="hint">Scroll down to explore <i>→</i></div></div>
+  </div></div>
+</section>
+<div class="rail" id="rail"></div>
+<script>
+const P = [
+  { name: "AtomixOS", from: [0, -1], c: "#4aa3ec", img: "img/atomixos.png", grp: "Device infrastructure", desc: "NixOS for single-board computers. Atomic A/B updates over the air, automatic rollback when a boot fails, and apps shipped as containers.", tags: ["nixos", "rauc", "u-boot", "podman"], site: "https://robertderose.github.io/atomixos/", code: "https://github.com/RobertDeRose/atomixos" },
+  { name: "Nixstasis", from: [0, 1], c: "#4ee2ce", img: "img/nixstasis.png", grp: "Device infrastructure", desc: "Every device in your fleet, one click away. See what each device reports, get alerted when something breaks, and open a shell on any of them, even behind NAT, without opening a port on the device. A server you run and a small agent on each Linux device.", tags: ["self-hosted", "fleet monitoring", "remote shell", "alerts"], site: "https://robertderose.github.io/nixstasis/", code: "https://github.com/RobertDeRose/nixstasis" },
+  { name: "krun runtime", from: [.7, -.7], c: "#b98cff", img: "img/krun.svg", grp: "Mac developer tools", desc: "An alternative VM runtime plugin for Apple's container, using libkrun and Hypervisor.framework. Memory freed inside the guest returns to macOS while the VM keeps running.", tags: ["libkrun", "hypervisor.framework", "apple container"], site: "https://robertderose.github.io/container-krun-runtime/", code: "https://github.com/RobertDeRose/container-krun-runtime" },
+  { name: "Compose", from: [.7, .7], c: "#f26155", img: "img/compose.png", grp: "Mac developer tools", desc: "Run unmodified Docker Compose in one persistent Linux machine through Apple's container CLI. Ports are mirrored to localhost, and host tools can connect through a Docker socket.", tags: ["swift", "docker compose", "apple container"], site: "https://robertderose.github.io/container-compose-plugin/", code: "https://github.com/RobertDeRose/container-compose-plugin" },
+  { name: "HexBox", from: [1, 0], c: "#e8954a", img: "img/hexbox.png", grp: "Mac developer tools", desc: "A nix-darwin module that gives Nix on your Mac an aarch64-linux builder in Apple's container. It boots on demand, shuts down after five idle minutes, and keeps its /nix store.", tags: ["nix-darwin", "aarch64-linux"], site: "https://robertderose.github.io/nix-hex-box/", code: "https://github.com/RobertDeRose/nix-hex-box" },
+];
+const track = document.getElementById("track"), story = document.getElementById("story"), rail = document.getElementById("rail"), comb = document.getElementById("comb");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const flat = () => matchMedia("(max-width: 760px), (prefers-reduced-motion: reduce)").matches;
+
+track.insertAdjacentHTML("beforeend", P.map((p, i) => `
+  <div class="panel" style="--pc:${p.c}">
+    <div class="ghost">${p.name}</div>
+    <div class="inner">
+      <div><div class="num">${String(i + 1).padStart(2, "0")} / ${String(P.length).padStart(2, "0")} · ${p.grp}</div>
+        <h2>${p.name}</h2><p>${p.desc}</p>
+        <div class="tags">${p.tags.map(t => `<span>${t}</span>`).join("")}</div>
+        <div class="cta"><a href="${p.site}">Project site</a><a href="${p.code}">View source</a></div>
+        <button class="back" type="button">← All projects</button></div>
+      <div class="side">
+        <div class="art"><span><img src="${p.img}" alt=""></span></div>
+      </div>
+    </div>
+  </div>`).join(""));
+const tile = (p, i) => `<button class="hex" type="button" data-i="${i + 1}" style="--hc:${p.c}"><span><img src="${p.img}" alt=""><b>${p.name}</b></span></button>`;
+comb.innerHTML = `<div class="r">${P.slice(0, 2).map((p, i) => tile(p, i)).join("")}</div><div class="r">${P.slice(2).map((p, i) => tile(p, i + 2)).join("")}</div>`;
+rail.innerHTML = ["About", ...P.map(p => p.name)].map((n, i) => `<button type="button" data-i="${i}">${n}</button>`).join("");
+const panels = [...track.children], btns = [...rail.children];
+const colors = ["#6f9cff", ...P.map(p => p.c)];
+panels.forEach((_, i) => {
+  const m = document.createElement("div");
+  m.className = "snap";
+  m.style.top = `calc((100% - 100vh) * ${i / (panels.length - 1)})`;
+  story.appendChild(m);
+});
+
+function goTo(i) {
+  if (flat()) { panels[i].scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); return; }
+  const max = story.offsetHeight - innerHeight;
+  scrollTo({ top: story.offsetTop + max * (i / (panels.length - 1)), behavior: "smooth" });
+}
+rail.addEventListener("click", e => { const b = e.target.closest("button"); if (b) goTo(+b.dataset.i); });
+track.addEventListener("click", e => { if (e.target.closest(".back")) goTo(0); });
+comb.addEventListener("click", e => { const b = e.target.closest(".hex"); if (!b) return; const r = b.getBoundingClientRect(); ripple(r.left + r.width / 2, r.top + r.height / 2, colors[+b.dataset.i], 1.5); goTo(+b.dataset.i); });
+comb.addEventListener("pointerover", e => { const b = e.target.closest(".hex"); if (b && b !== lastHover) { lastHover = b; const r = b.getBoundingClientRect(); ripple(r.left + r.width / 2, r.top + r.height / 2, colors[+b.dataset.i], .8); } });
+let lastHover = null;
+
+// Lattice: fixed hex grid, drifts at a third of the track speed, tinted by the current project.
+const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+let W, H, R = 24, cellW, cellH;
+const mouse = { x: -999, y: -999 }, ripples = [];
+let tint = [111, 156, 255], pos = 0, landed = 0;
+const rgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+function ripple(x, y, c, s = 1) { if (!reduce) ripples.push({ x, y, t: 0, rgb: rgb(c), s }); }
+function size() { const d = devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); cellW = Math.sqrt(3) * R; cellH = 1.5 * R; }
+size(); addEventListener("resize", () => { size(); update(); });
+addEventListener("pointermove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+function hexPath(x, y, r) { ctx.beginPath(); for (let k = 0; k < 6; k++) { const a = Math.PI / 3 * k + Math.PI / 6; ctx.lineTo(x + r * Math.cos(a), y + r * Math.sin(a)); } ctx.closePath(); }
+let t = 0;
+function frame() {
+  ctx.clearRect(0, 0, W, H);
+  const shift = flat() ? 0 : (pos * W / 3) % (cellW * 2);
+  for (const r of ripples) r.t += 7 * r.s;
+  while (ripples.length && ripples[0].t > Math.max(W, H) * 1.3) ripples.shift();
+  for (let row = -1; row * cellH < H + R; row++) {
+    for (let col = -2; col * cellW < W + cellW * 3; col++) {
+      const x = col * cellW + (row & 1 ? cellW / 2 : 0) - shift, y = row * cellH;
+      let a = .05 + .04 * Math.sin((x + shift) * .006 + y * .004 + t * .02), col3 = tint;
+      const dm = Math.hypot(x - mouse.x, y - mouse.y);
+      if (dm < 170) a += (1 - dm / 170) * .4;
+      for (const r of ripples) {
+        const d = Math.abs(Math.hypot(x - r.x, y - r.y) - r.t);
+        if (d < 44) { a += (1 - d / 44) * Math.max(0, 1 - r.t / (Math.max(W, H) * 1.2)) * .85; col3 = r.rgb; }
+      }
+      ctx.strokeStyle = `rgba(${col3[0]},${col3[1]},${col3[2]},${Math.min(a, .9)})`;
+      hexPath(x, y, R - 2); ctx.stroke();
+    }
+  }
+  t++;
+  if (!reduce) requestAnimationFrame(frame);
+}
+
+// Each project holds still for part of its scroll range (HOLD, in panels) before
+// sliding to the next, so it can be read after the parallax settles.
+const HOLD = .45;
+function settle(raw) {
+  const i = Math.floor(raw), f = Math.min(1, Math.max(0, (raw - i - HOLD / 2) / (1 - HOLD)));
+  return i + f * f * (3 - 2 * f);
+}
+function update() {
+  if (flat()) {
+    const mid = innerHeight / 2;
+    const i = panels.findIndex(p => { const r = p.getBoundingClientRect(); return r.top <= mid && r.bottom > mid; });
+    tint = rgb(colors[Math.max(0, i)]); document.documentElement.style.setProperty("--c", colors[Math.max(0, i)]);
+    if (reduce) frame();
+    return;
+  }
+  const max = story.offsetHeight - innerHeight, prog = Math.min(1, Math.max(0, -story.getBoundingClientRect().top / max));
+  pos = settle(prog * (panels.length - 1));
+  track.style.transform = `translate3d(${-pos * 100}vw,0,0)`;
+  const i = Math.floor(pos), f = pos - i, a = rgb(colors[i]), b = rgb(colors[Math.min(i + 1, colors.length - 1)]);
+  tint = a.map((v, k) => Math.round(v * (1 - f) + b[k] * f));
+  const near = Math.round(pos);
+  document.documentElement.style.setProperty("--c", colors[near]);
+  panels.forEach((p, j) => {
+    const d = pos - j, g = p.querySelector(".ghost"), art = p.querySelector(".art");
+    if (g) g.style.transform = `translateX(${d * 40}vw)`;
+    if (art) {
+      // Logos fly in from their project's direction and keep going out the opposite side.
+      const [fx, fy] = P[j - 1]?.from || [0, 1], t = Math.max(-1, Math.min(1, -d));
+      art.style.transform = `translate(${fx * t * 45}vw, ${fy * t * 85}vh) rotate(${t * (fx || fy) * -45}deg)`;
+    }
+  });
+  btns.forEach((bt, j) => bt.classList.toggle("on", near === j));
+  // Ripple out from the logo each time a project settles into view.
+  if (Math.abs(pos - near) < .04 && near !== landed) {
+    landed = near;
+    const art = panels[near].querySelector(".art");
+    if (art) { const r = art.getBoundingClientRect(); ripple(r.left + r.width / 2, r.top + r.height / 2, colors[near], 1.3); }
+  }
+}
+// Hovering the name shakes its letters harder and harder; after three seconds
+// they blow apart, the lattice ripples in every project color, and they return.
+(() => {
+  if (reduce) return;
+  const h1 = document.querySelector(".intro h1");
+  const chars = [];
+  const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
+  const texts = []; while (walker.nextNode()) texts.push(walker.currentNode);
+  texts.forEach(t => {
+    const frag = document.createDocumentFragment();
+    for (const c of t.textContent) { const e = document.createElement("span"); e.className = "ch"; e.textContent = c; frag.appendChild(e); chars.push(e); }
+    t.replaceWith(frag);
+  });
+  const FUSE = 3000;
+  let state = "idle", start = 0, raf = 0, parts = [];
+  function shake(now) {
+    if (state !== "shaking") return;
+    const k = Math.min(1, (now - start) / FUSE), amp = 1 + k * k * 9;
+    for (const c of chars) c.style.transform = `translate(${(Math.random() - .5) * amp}px,${(Math.random() - .5) * amp}px) rotate(${(Math.random() - .5) * amp * .8}deg)`;
+    if (k >= 1) return explode();
+    raf = requestAnimationFrame(shake);
+  }
+  function explode() {
+    state = "exploding";
+    const hr = h1.getBoundingClientRect(), cx = hr.left + hr.width / 2, cy = hr.top + hr.height / 2;
+    colors.forEach((c, i) => setTimeout(() => ripple(cx, cy, c, 1.6 - i * .12), i * 90));
+    parts = chars.map(c => {
+      const r = c.getBoundingClientRect(), dx = r.left + r.width / 2 - cx, dy = r.top + r.height / 2 - cy, d = Math.hypot(dx, dy) || 1;
+      const sp = 14 + Math.random() * 16;
+      c.classList.remove("settle");
+      return { c, x: 0, y: 0, vx: dx / d * sp + (Math.random() - .5) * 8, vy: dy / d * sp - 10 - Math.random() * 10, r: 0, vr: (Math.random() - .5) * 40 };
+    });
+    let last = performance.now();
+    (function fly(now) {
+      const dt = Math.min(2, (now - last) / 16.7); last = now;
+      for (const p of parts) {
+        p.vy += .9 * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.r += p.vr * dt;
+        p.c.style.transform = `translate(${p.x}px,${p.y}px) rotate(${p.r}deg)`;
+      }
+      if (parts.some(p => p.y < innerHeight * 1.2)) raf = requestAnimationFrame(fly); else reform();
+    })(last);
+  }
+  function reform() {
+    chars.forEach((c, i) => {
+      c.style.opacity = "0"; c.style.transform = "translate(0,-40px) scale(.4)";
+      setTimeout(() => { c.classList.add("settle"); c.style.opacity = "1"; c.style.transform = ""; }, 500 + i * 60);
+    });
+    setTimeout(() => { state = h1.matches(":hover") ? "spent" : "idle"; }, 500 + chars.length * 60 + 500);
+  }
+  h1.addEventListener("pointerenter", () => {
+    if (state !== "idle") return;
+    state = "shaking"; start = performance.now();
+    chars.forEach(c => c.classList.remove("settle"));
+    raf = requestAnimationFrame(shake);
+  });
+  h1.addEventListener("pointerleave", () => {
+    if (state === "spent") state = "idle";
+    if (state !== "shaking") return;
+    state = "idle"; cancelAnimationFrame(raf);
+    chars.forEach(c => { c.classList.add("settle"); c.style.transform = ""; });
+  });
+})();
+addEventListener("scroll", update, { passive: true });
+update(); frame();
+</script>
+</body>
+</html>

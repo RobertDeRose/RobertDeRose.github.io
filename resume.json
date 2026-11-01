@@ -1,0 +1,394 @@
+{
+  "basics": {
+    "name": "Robert DeRose",
+    "label": "Systems & Platform Engineering | Embedded Linux & IoT",
+    "image": "img/avatar.png",
+    "url": "https://robertderose.github.io",
+    "summary": "I build the software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD that ships it. Seventeen years across Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nFor 3 years I've been the sole engineer behind SFERO, Checkpoint's best-selling new product, and the CI/CD the whole company ships on. Since 2025 I've worked agent-first with models from Anthropic and OpenAI, using spec-driven development and Beads. Working this way, I made a ~64K-line custom DDS messaging prototype unnecessary by packaging Zenoh with an MQTT bridge in ~2 weeks, and rewrote our RFID platform in my spare time.",
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "RobertDeRose",
+        "url": "https://www.linkedin.com/in/RobertDeRose"
+      },
+      {
+        "network": "GitHub",
+        "username": "RobertDeRose",
+        "url": "https://github.com/RobertDeRose"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Checkpoint Systems",
+      "position": "Senior Software Engineer",
+      "location": "Thorofare, NJ",
+      "startDate": "2019-09-19",
+      "summary": "Sole engineer leading SFERO, Checkpoint's best-selling new product, for 3+ years; build the shared embedded Linux, messaging, and release infrastructure.",
+      "highlights": [
+        "Replaced a colleague's multicast-based messaging proof of concept, ~64K lines of custom Data Distribution Service (DDS) code built over 5 months, with a packaged Zenoh/MQTT platform in ~2 weeks: added mutual TLS (mTLS) across the device fleet, adapted their per-application leader election, and built a React operator console",
+        "Rewrote our RFID loss-prevention platform from scratch in Elixir/OTP in my spare time over ~3.5 months, using OTP's distribution and fault tolerance for restart-safe alarm processing that never replays an alarm, and alarm strategies operators can change without new code, in the UI or through APIs for external integrators",
+        "Upgraded every UI from React 17 and PatternFly 4 to React 19 and PatternFly 6 on Vite with custom mise tooling, and updated the Copier templates to use it; migrated Flask dashboards into Cockpit modules, removing ~77K lines of legacy code",
+        "On my own initiative, rebuilt the provisioning app in Rust/Tauri, backed by a server secured with Microsoft Entra ID: only approved employees and contractors can sign in to receive the device credentials it needs to automate setup, and those secrets stay in the macOS Keychain or Windows Credential Manager",
+        "Introduced AI-assisted development across the team's repositories: spec-driven development with AI coding agents (Claude Code, Codex), Beads for task tracking and agent memory, and gated code review, taking the team from delegating small agent tasks to delivering whole projects with agents",
+        "Set the company's packaging and release standard: built and operate the shared CI/CD the whole company relies on, reusable GitHub Actions on a custom, spec-tested Bash framework that builds and tests Debian packages for Python, Rust, TypeScript, and generic projects on arm64 and amd64 across all three supported Ubuntu LTS releases, adopted by 30+ repositories in 3 global offices",
+        "Rebuilt the company's custom APT repository server, replacing hours-long cron-driven index rebuilds with filesystem watchers and a cached package index: packages now publish within a minute, concurrent publishes no longer corrupt the index, and build-and-test cycles dropped from hours to minutes",
+        "Built a self-hosted GitHub Actions runner platform for the company's in-house infrastructure and legacy constraints, with weekly self-updates from a scheduled workflow and a Debian caching proxy to speed up builds",
+        "As sole engineer, redesigned the device OS support packages from the ground up around Linux standards instead of home-grown conventions: product-independent Debian packages, monorepo support in the shared CI/CD, and ~44K fewer lines of legacy code; led EN 18031 security hardening across authentication, SSH access, and rate limiting",
+        "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
+        "Automated builds of CPython 3.11–3.15 Debian packages tuned with profile-guided optimization (PGO) and link-time optimization (LTO) for three Ubuntu LTS releases, standardizing Python across product lines",
+        "Built a cross-platform device provisioning app in Python/Flet that configures devices offline over SSH",
+        "Made the standard the default: reusable Copier project templates give every new project the shared CI/CD, Debian packaging, and UI tooling from day one, including the FastAPI, SQLAlchemy, and Alembic REST service template behind Checkpoint's Readfinity Core RFID reader software"
+      ],
+      "printHighlights": [
+        "Replaced a 5-month, ~64K-line DDS prototype with Zenoh/MQTT in 2 weeks",
+        {
+          "text": "Set the company's CI/CD and packaging standard (30+ repos, 3 offices)",
+          "preAI": true
+        },
+        {
+          "text": "Redesigned the device OS on Linux standards solo; led EN 18031 hardening",
+          "preAI": true
+        },
+        {
+          "text": "Cut APT repository publishing from hours to under a minute",
+          "preAI": true
+        },
+        "Rewrote the RFID platform in Elixir/OTP solo in 3.5 spare-time months",
+        "Built a Rust/Tauri provisioning app with Entra ID-gated secrets"
+      ],
+      "highlightGroups": [
+        {
+          "title": "With AI coding agents (2025–present)",
+          "highlights": [
+            "Replaced a colleague's multicast-based messaging proof of concept, ~64K lines of custom Data Distribution Service (DDS) code built over 5 months, with a packaged Zenoh/MQTT platform in ~2 weeks: added mutual TLS (mTLS) across the device fleet, adapted their per-application leader election, and built a React operator console",
+            "Rewrote our RFID loss-prevention platform from scratch in Elixir/OTP in my spare time over ~3.5 months, using OTP's distribution and fault tolerance for restart-safe alarm processing that never replays an alarm, and alarm strategies operators can change without new code, in the UI or through APIs for external integrators",
+            "Upgraded every UI from React 17 and PatternFly 4 to React 19 and PatternFly 6 on Vite with custom mise tooling, and updated the Copier templates to use it; migrated Flask dashboards into Cockpit modules, removing ~77K lines of legacy code",
+            "On my own initiative, rebuilt the provisioning app in Rust/Tauri, backed by a server secured with Microsoft Entra ID: only approved employees and contractors can sign in to receive the device credentials it needs to automate setup, and those secrets stay in the macOS Keychain or Windows Credential Manager",
+            "Introduced AI-assisted development across the team's repositories: spec-driven development with AI coding agents (Claude Code, Codex), Beads for task tracking and agent memory, and gated code review, taking the team from delegating small agent tasks to delivering whole projects with agents"
+          ]
+        },
+        {
+          "title": "Before AI coding agents (2019–2024)",
+          "highlights": [
+            "Set the company's packaging and release standard: built and operate the shared CI/CD the whole company relies on, reusable GitHub Actions on a custom, spec-tested Bash framework that builds and tests Debian packages for Python, Rust, TypeScript, and generic projects on arm64 and amd64 across all three supported Ubuntu LTS releases, adopted by 30+ repositories in 3 global offices",
+            "Rebuilt the company's custom APT repository server, replacing hours-long cron-driven index rebuilds with filesystem watchers and a cached package index: packages now publish within a minute, concurrent publishes no longer corrupt the index, and build-and-test cycles dropped from hours to minutes",
+            "Built a self-hosted GitHub Actions runner platform for the company's in-house infrastructure and legacy constraints, with weekly self-updates from a scheduled workflow and a Debian caching proxy to speed up builds",
+            "As sole engineer, redesigned the device OS support packages from the ground up around Linux standards instead of home-grown conventions: product-independent Debian packages, monorepo support in the shared CI/CD, and ~44K fewer lines of legacy code; led EN 18031 security hardening across authentication, SSH access, and rate limiting",
+            "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
+            "Automated builds of CPython 3.11–3.15 Debian packages tuned with profile-guided optimization (PGO) and link-time optimization (LTO) for three Ubuntu LTS releases, standardizing Python across product lines",
+            "Built a cross-platform device provisioning app in Python/Flet that configures devices offline over SSH",
+            "Made the standard the default: reusable Copier project templates give every new project the shared CI/CD, Debian packaging, and UI tooling from day one, including the FastAPI, SQLAlchemy, and Alembic REST service template behind Checkpoint's Readfinity Core RFID reader software"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Edmunds GovTech",
+      "position": "Senior Software Engineer",
+      "location": "Northfield, NJ",
+      "startDate": "2018",
+      "endDate": "2019-09",
+      "highlights": [
+        "Built an automated upgrade system that let government customers upgrade straight from several major versions behind to the latest release instead of one version at a time, saving technicians hours to days per upgrade",
+        "Designed its database migration engine for MySQL, Microsoft SQL Server, and Actian Zen (PSQL), absorbing years of schema changes previously tracked by hand in Excel",
+        "Led a team of three developers integrating Orbeon Forms into the product",
+        "Built a JavaFX application to install and manage the product's Windows services",
+        "Moved the entire codebase from System.out.println to Apache Log4j 2 with a script that analyzed each call's context",
+        "Migrated all source code from Subversion to Git and set up GitLab CI/CD"
+      ],
+      "printHighlights": [
+        "Built automated upgrades that took customers from several major versions behind straight to the latest, saving techs hours to days"
+      ]
+    },
+    {
+      "name": "Linode, Inc",
+      "position": "Developer",
+      "location": "Galloway, NJ",
+      "startDate": "2015",
+      "endDate": "2018",
+      "highlights": [
+        "Personally built Linode's OAuth 2.0 platform, integrating the legacy ColdFusion website and the new Python API service: single sign-on (SSO) for Linode's apps, an OAuth provider for third-party apps, and a custom SSH PAM module that authenticated access to Linode's SSH console with optional two-factor authentication (2FA)",
+        "Built reproducible local development environments, first with Vagrant and SaltStack configuration management and then Docker Compose, moving the whole stack off real servers so anyone in the company could contribute; one support engineer it opened the door for became one of the team's best developers",
+        "Championed and implemented the OpenAPI 3 specification for Linode API v4",
+        "Managed Jenkins continuous integration (CI) with GitHub Enterprise for automated testing and code quality checks"
+      ],
+      "printHighlights": [
+        "Built Linode's OAuth 2.0 platform: SSO for its apps, a third-party OAuth provider, and SSH console login with 2FA",
+        "Built reproducible local dev environments with Vagrant and Docker Compose, opening contributions company-wide"
+      ]
+    },
+    {
+      "name": "Mitel (formerly Ulticom, Inc)",
+      "position": "Software Engineer",
+      "location": "Mount Laurel, NJ",
+      "startDate": "2011",
+      "endDate": "2015",
+      "highlights": [
+        "Developed a distributed, fault-tolerant Diameter Signaling Controller on Cisco's NCS platform, integrating MongoDB for dynamic routing rules",
+        "Built its SOAP and REST APIs with Apache CXF and Jersey, hosted on an embedded Jetty server",
+        "Built a metrics collection system for observability with MySQL, Hibernate, and Protocol Buffers"
+      ],
+      "printHighlights": []
+    },
+    {
+      "name": "Amazon.com",
+      "position": "Software Engineer (Intern)",
+      "location": "Seattle, WA",
+      "startDate": "2009",
+      "endDate": "2010",
+      "highlights": [
+        "Developed an IP reputation system for Amazon Simple Email Service (SES) with Spring, Hibernate, and Amazon RDS",
+        "Built email deliverability monitoring that detected mail providers marking messages as junk, tracking the reputation of Amazon's mail transfer agents (MTAs)"
+      ],
+      "printHighlights": []
+    }
+  ],
+  "projects": [
+    {
+      "name": "Nixstasis",
+      "url": "https://robertderose.github.io/nixstasis/",
+      "startDate": "2025-11",
+      "description": "Self-hosted IoT fleet monitoring and remote device access, no inbound ports.",
+      "highlights": [
+        "Contract-enforced client/server E2E test harness",
+        "Remote SSH through lease-bound tunnel credentials, a sandboxed Starlark scripting system, and command allowlist policies",
+        "Releases ship .deb, .rpm, and .run packages and container images from CI, with a Docusaurus docs and product site"
+      ],
+      "keywords": [
+        "Go",
+        "Elixir",
+        "Phoenix LiveView",
+        "Ash",
+        "PostgreSQL",
+        "FRP",
+        "Caddy",
+        "Docker"
+      ],
+      "color": "#4ee2ce",
+      "printHighlights": [
+        "Remote SSH via lease-bound tunnel credentials; CI-built .deb/.rpm packages and container images"
+      ]
+    },
+    {
+      "name": "AtomixOS",
+      "url": "https://robertderose.github.io/atomixos/",
+      "startDate": "2026-04",
+      "description": "NixOS for single-board computers with atomic A/B system updates and automatic rollback.",
+      "highlights": [
+        "Signed RAUC bundles, U-Boot boot-count rollback, a read-only root, and Podman app deployment",
+        "38 NixOS VM integration tests, including power-loss and watchdog-rollback scenarios, on Linux and macOS"
+      ],
+      "keywords": [
+        "NixOS",
+        "RAUC",
+        "U-Boot",
+        "systemd",
+        "Podman",
+        "Python"
+      ],
+      "color": "#4aa3ec",
+      "printHighlights": [
+        "Signed RAUC bundles; 38 VM tests incl. power-loss and watchdog rollback"
+      ]
+    },
+    {
+      "name": "container-krun-runtime",
+      "url": "https://robertderose.github.io/container-krun-runtime/",
+      "startDate": "2026",
+      "description": "libkrun virtualization runtime for Apple's container; reclaims freed memory for macOS.",
+      "highlights": [
+        "Feature parity on exec, volumes, virtio-fs, and port forwarding, and macOS reclaims memory the guest releases while it runs",
+        "Built a native vmnet virtio-net backend in libkrun (Rust) with packed rings, multiqueue TX, and batched syscalls"
+      ],
+      "keywords": [
+        "Swift",
+        "Rust",
+        "libkrun",
+        "Hypervisor.framework",
+        "virtio"
+      ],
+      "color": "#b98cff",
+      "printHighlights": [
+        "Built a native vmnet virtio-net backend in libkrun (Rust)"
+      ]
+    },
+    {
+      "name": "container-compose-plugin",
+      "url": "https://robertderose.github.io/container-compose-plugin/",
+      "startDate": "2026",
+      "description": "Unmodified Docker Compose for Apple's container CLI.",
+      "highlights": [
+        "Ports mirrored to localhost and a Docker socket for IDEs and Testcontainers",
+        "Built as an external plugin after Apple declined the upstream change"
+      ],
+      "keywords": [
+        "Swift",
+        "Docker Compose",
+        "Apple container",
+        "Homebrew"
+      ],
+      "color": "#f26155",
+      "printHighlights": [
+        "Docker socket for IDEs and Testcontainers; distributed through Homebrew"
+      ]
+    },
+    {
+      "name": "HexBox",
+      "url": "https://robertderose.github.io/nix-hex-box/",
+      "startDate": "2026",
+      "description": "On-demand ARM64 Linux Nix builder for nix-darwin, in Apple's container.",
+      "highlights": [
+        "27 releases to v1.2, with idle auto-shutdown and a persistent store",
+        "Weekly image rebuilds gated on a 7-day release age, and bot-driven dependency updates"
+      ],
+      "keywords": [
+        "Nix",
+        "nix-darwin",
+        "Apple container",
+        "Bash",
+        "GitHub Actions"
+      ],
+      "color": "#e8954a",
+      "printHighlights": [
+        "27 releases to v1.2; weekly image rebuilds gated on 7-day release age"
+      ]
+    },
+    {
+      "name": "Open-source contributions",
+      "description": "Fixes in docker-library/python, mise, libkrun, and paho-mqtt.",
+      "highlights": [
+        "docker-library/python (official image, 9B+ pulls): found and fixed a silent regression that skipped profile-guided optimization across 37 Dockerfile variants",
+        "jdx/mise and jdx/hk: OS/architecture tool filtering, and step settings inherited from groups",
+        "libkrun: released leaked vsock proxies after a clean guest shutdown",
+        "eclipse-paho/paho.mqtt.python, cruft, himmelblau, aube, and zensical: reconnect, packaging, and build fixes"
+      ],
+      "color": "#6f9cff",
+      "printHighlights": [
+        "docker-library/python (9B+ pulls): fixed PGO silently skipped in 37 variants",
+        "jdx/mise: OS/architecture tool filtering",
+        "libkrun: fixed vsock proxy resource leaks on clean shutdown"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Drexel University",
+      "area": "Computer Engineering",
+      "studyType": "BS",
+      "startDate": "2008",
+      "endDate": "2012",
+      "score": "3.56 - Cum Laude"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Languages",
+      "keywords": [
+        "Python",
+        "Elixir",
+        "Rust",
+        "Go",
+        "TypeScript",
+        "Nix",
+        "Bash",
+        "Swift",
+        "Java"
+      ]
+    },
+    {
+      "name": "Embedded Linux",
+      "keywords": [
+        "Debian packaging",
+        "Ubuntu LTS",
+        "systemd",
+        "NixOS",
+        "RAUC",
+        "U-Boot",
+        "A/B and OTA updates",
+        "Cockpit"
+      ]
+    },
+    {
+      "name": "IoT & messaging",
+      "keywords": [
+        "MQTT",
+        "Zenoh",
+        "DDS",
+        "RFID/EAS"
+      ]
+    },
+    {
+      "name": "Frameworks",
+      "keywords": [
+        "Elixir/OTP",
+        "Phoenix LiveView",
+        "FastAPI",
+        "SQLAlchemy",
+        "Alembic",
+        "Flet",
+        "Tauri"
+      ]
+    },
+    {
+      "name": "DevOps & CI/CD",
+      "keywords": [
+        "GitHub Actions",
+        "self-hosted runners",
+        "APT repositories",
+        "GitLab CI/CD",
+        "Jenkins",
+        "Docker Compose",
+        "Podman",
+        "Apple container",
+        "mise",
+        "Copier"
+      ]
+    },
+    {
+      "name": "Security",
+      "keywords": [
+        "Mutual TLS (mTLS)",
+        "EN 18031",
+        "Microsoft Entra ID",
+        "OAuth 2.0",
+        "Single sign-on (SSO)",
+        "2FA",
+        "SSH hardening"
+      ]
+    },
+    {
+      "name": "Databases",
+      "keywords": [
+        "PostgreSQL",
+        "MySQL",
+        "Microsoft SQL Server",
+        "Actian Zen",
+        "MongoDB"
+      ]
+    },
+    {
+      "name": "Frontend",
+      "keywords": [
+        "React",
+        "PatternFly",
+        "Vite"
+      ]
+    },
+    {
+      "name": "AI-assisted development",
+      "keywords": [
+        "Anthropic and OpenAI models (Claude Code, Codex)",
+        "OpenCode",
+        "local models",
+        "Orca",
+        "T3 Code",
+        "spec-driven development",
+        "Beads"
+      ]
+    }
+  ],
+  "meta": {
+    "theme": "jsonresume-theme-hexways"
+  }
+}
