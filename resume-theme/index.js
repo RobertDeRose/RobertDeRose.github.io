@@ -24,20 +24,21 @@ const CONTACT = (() => {
 // small chunks of escaped characters, so neither the HTML nor the CSS contains
 // anything an email or phone regex would match.
 const cssEscape = (t) => [...t].map((c) => "\\" + c.codePointAt(0).toString(16) + " ").join("");
-function printOnly(value, rules) {
+// data-c names the value so the PDF build can reserve its spot (scripts/resume-pdf.mjs).
+function printOnly(value, rules, key) {
   const spans = [];
   for (let i = 0; i < value.length; i += 3) {
     const k = `k${rules.length}`;
     rules.push(`.${k}::before{content:"${cssEscape(value.slice(i, i + 3))}"}`);
     spans.push(`<span class="${k}"></span>`);
   }
-  return `<span class="pc">${spans.join("")}</span>`;
+  return `<span class="pc" data-c="${key}">${spans.join("")}</span>`;
 }
 
 // On screen the email is a button; the address is stored reversed and
 // base64-encoded and assembled in the browser on click.
-const reveal = (e) =>
-  `<button class="reveal" type="button" data-e="${Buffer.from([...e].reverse().join("")).toString("base64")}">Show email</button>`;
+const hide = (v) => Buffer.from([...v].reverse().join("")).toString("base64");
+const reveal = (e) => `<button class="reveal" type="button" data-e="${hide(e)}">Show email</button>`;
 
 // Dates are ISO 8601 at year, month, or day precision; show only what was given.
 function date(s) {
@@ -69,8 +70,8 @@ const section = (id, title, body) => (body ? `<section class="${id}"><h2>${title
 function header(b = {}, rules = []) {
   const contact = [
     CONTACT.email && reveal(CONTACT.email),
-    CONTACT.email && printOnly(CONTACT.email, rules),
-    CONTACT.phone && printOnly(CONTACT.phone, rules),
+    CONTACT.email && printOnly(CONTACT.email, rules, "email"),
+    CONTACT.phone && printOnly(CONTACT.phone, rules, "phone"),
     b.url && `<a href="${esc(b.url)}">${esc(host(b.url))}</a>`,
     // Print shows the address itself, since a bare "GitHub" means nothing on paper.
     ...(b.profiles || []).map((p) => `<a href="${esc(p.url)}"><span class="web-only">${esc(p.network)}</span><span class="print-only">${esc(host(p.url).replace(/^www\./, ""))}</span></a>`),
@@ -84,7 +85,7 @@ function header(b = {}, rules = []) {
       <nav class="contact">${contact.join("")}</nav>
     </div>
     <div class="actions">
-      <button class="btn" type="button" onclick="print()">Print / Save PDF</button>
+      <button class="btn" type="button" id="pdf" data-name="${esc(b.name)}"${CONTACT.email ? ` data-e="${hide(CONTACT.email)}"` : ""}${CONTACT.phone ? ` data-p="${hide(CONTACT.phone)}"` : ""}>Download PDF</button>
       ${b.url ? `<a class="btn ghost" href="${esc(b.url)}">Projects</a>` : ""}
     </div>
   </header>
@@ -159,6 +160,11 @@ const education = (items = []) =>
 // fonts, which Chrome embeds in PDFs as Type 3 glyphs that Preview cannot select.
 const FONTS = [["Red Hat Display", "RedHatDisplay", [[400, "Regular"], [500, "Medium"], [700, "Bold"]]], ["Red Hat Mono", "RedHatMono", [[400, "Regular"], [500, "Medium"]]]]
   .flatMap(([family, file, weights]) => weights.map(([w, name]) => `@font-face{font-family:"${family}";font-weight:${w};font-display:swap;src:url(fonts/${file}-${name}.woff2) format("woff2")}`))
+  .join("\n");
+
+// One zoom step per 8px of print width below Letter's 725px, rounded down with a little slack.
+const PRINT_ZOOM = Array.from({ length: 30 }, (_, i) => 717 - i * 8)
+  .map((w) => `@container (max-width: ${w + 7.99}px) { .page > * { zoom: ${(((w - 4) / 725) * 0.985).toFixed(3)}; } }`)
   .join("\n");
 
 const CSS = `
@@ -254,8 +260,9 @@ aside .tags { margin-top: 8px; }
 @media (prefers-reduced-motion: reduce) { .btn, .project { transition: none; } }
 
 /* Print and PDF: light paper, compact type, no lattice or buttons. */
-/* Safari lays print out ~677px wide (Chrome and Firefox use Letter's 725px); a container query zooms to match, with a little slack, so it stays one page. */
-@media print { .page { container-type: inline-size; } @container (max-width: 715px) { .page > * { zoom: .925; } } }
+/* Print engines lay Letter out at different widths (desktop Chrome and Firefox 725px, Safari ~677px, iOS browsers in between).
+   Container queries step the zoom down with the real width so the layout, and the one-page fit, match everywhere. */
+@media print { .page { container-type: inline-size; } ${PRINT_ZOOM} }
 @page { size: Letter; margin: 6.5mm 12mm; }
 @media print {
   :root { --bg: #fff; --panel: #fff; --line: #d9dde5; --fg: #0f1320; --muted: #5d6576; --soft: #2a3040; --accent: #3b5fd6; color-scheme: light; }
@@ -283,6 +290,8 @@ aside .tags { margin-top: 8px; }
   .print-only { display: block; }
   .when .key { display: inline; }
   .contact .print-only { display: inline; }
+  /* The PDF build lays contact details out but leaves them blank; the download button writes them in. */
+  .pdf-build .pc { visibility: hidden; }
   .job h3, .job .when { break-after: avoid; }
   .job:not(:has(ul:not(.web-only))) { padding-bottom: 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
   .job:not(:has(ul:not(.web-only))) .when { order: 2; }
@@ -348,6 +357,36 @@ document.querySelectorAll(".reveal").forEach((b) => b.addEventListener("click", 
 `;
 
 // Faint hex lattice that brightens near the cursor. Static when motion is reduced.
+// Download PDF: the build-time PDF (scripts/resume-pdf.mjs) with contact details
+// written in on click, so the file is identical in every browser. Falls back to
+// printing the page if anything fails.
+const DOWNLOAD = `
+document.getElementById("pdf")?.addEventListener("click", async (ev) => {
+  const b = ev.currentTarget, dec = (v) => v && [...atob(v)].reverse().join("");
+  const load = (src) => new Promise((ok, fail) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = fail; document.head.append(s); });
+  const get = (url, as) => fetch(url).then((r) => { if (!r.ok) throw new Error(url); return r[as](); });
+  b.disabled = true;
+  try {
+    const [pdf, font, layout] = await Promise.all([
+      get("resume.pdf", "arrayBuffer"), get("fonts/RedHatDisplay-Regular-ascii.ttf", "arrayBuffer"), get("resume-pdf.json", "json"),
+      window.PDFLib || load("js/vendor/pdf-lib.min.js"), window.fontkit || load("js/vendor/fontkit.umd.min.js"),
+    ]);
+    const { stampContact } = await import("./js/stamp-contact.mjs");
+    const bytes = await stampContact({ ...window.PDFLib, fontkit: window.fontkit }, pdf, font, layout, { email: dec(b.dataset.e), phone: dec(b.dataset.p) });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+    a.download = b.dataset.name.replace(/\\s+/g, "-") + "-Resume.pdf";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+  } catch (err) {
+    console.error(err);
+    print();
+  } finally {
+    b.disabled = false;
+  }
+});
+`;
+
 const LATTICE = `
 (() => {
   const cv = document.getElementById("lattice"), ctx = cv.getContext("2d");
@@ -484,7 +523,7 @@ export function render(resume) {
   </div>
   ${openSource(resume.openSource)}
 </div>
-<script>${LATTICE}${HEXFACE}${REVEAL}</script>
+<script>${LATTICE}${HEXFACE}${REVEAL}${DOWNLOAD}</script>
 </body>
 </html>`;
 }

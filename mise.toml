@@ -2,33 +2,21 @@
 node = "22"
 
 [tasks."site:build"]
-description = "Assemble the static site and render the resume into dist/"
-sources = ["site/**/*", "resume.json", "resume-theme/**/*", "package-lock.json"]
+description = "Assemble the static site, render the resume, and print its PDF into dist/"
+sources = ["site/**/*", "resume.json", "resume-theme/**/*", "scripts/**/*", "package-lock.json"]
 outputs = ["dist/**/*"]
 run = [
   "npm ci --silent",
-  "rm -rf dist && mkdir -p dist && cp -R site/. dist/",
+  "rm -rf dist && mkdir -p dist/js/vendor && cp -R site/. dist/",
+  "cp node_modules/pdf-lib/dist/pdf-lib.min.js node_modules/@pdf-lib/fontkit/dist/fontkit.umd.min.js dist/js/vendor/",
   "npx resumed render resume.json -o dist/resume.html",
+  "node scripts/resume-pdf.mjs",
 ]
 
 [tasks."resume:pdf"]
-description = "Print the resume to private/Robert-DeRose-Resume.pdf with headless Chrome (local only)"
+description = "Build the site, including private/Robert-DeRose-Resume.pdf with contact details (local only)"
 depends = ["site:build"]
-run = '''
-chrome="${CHROME:-}"
-for c in google-chrome google-chrome-stable chromium chromium-browser \
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; do
-  [ -n "$chrome" ] && break
-  command -v "$c" >/dev/null 2>&1 && chrome="$c"
-  [ -x "$c" ] && chrome="$c"
-done
-[ -n "$chrome" ] || { echo "No Chrome found; set CHROME to its path" >&2; exit 1; }
-mkdir -p private
-"$chrome" --headless=new --disable-gpu --no-sandbox --no-pdf-header-footer \
-  --virtual-time-budget=10000 --run-all-compositor-stages-before-draw \
-  --print-to-pdf="$PWD/private/Robert-DeRose-Resume.pdf" "file://$PWD/dist/resume.html" 2>/dev/null
-test -s private/Robert-DeRose-Resume.pdf
-'''
+run = "test -s private/Robert-DeRose-Resume.pdf && echo private/Robert-DeRose-Resume.pdf"
 
 [tasks."site:serve"]
 description = "Build the site and serve dist/ on http://localhost:8000"
