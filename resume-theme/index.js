@@ -110,13 +110,25 @@ const projects = (items = []) =>
     ? `<ul class="picks">${items
         .map(
           (p, i) => `
-      <li style="--pc:${esc(p.color || PALETTE[i % PALETTE.length])}">
+      <li${p.printOnly ? ' class="print-only"' : ""} style="--pc:${esc(p.color || PALETTE[i % PALETTE.length])}">
         <h3>${p.url ? `<a href="${esc(p.url)}">${esc(p.name)}</a>` : esc(p.name)}</h3>
         ${p.description ? `<p>${esc(p.description)}</p>` : ""}
         ${list(p.printHighlights, "print-only")}
       </li>`,
         )
         .join("")}</ul>`
+    : "";
+
+// Website-only footer: tools the author uses and backs, plus recent upstream pull requests.
+const openSource = (o) =>
+  o
+    ? `<section class="oss web-only"><h2>${esc(o.title)}</h2>
+    ${o.summary ? `<p class="lede">${esc(o.summary)}</p>` : ""}
+    <div class="oss-grid">
+      <div><h3>Notable contributions</h3><ul class="toolset">${(o.contributions || []).map((c) => `<li><a href="${esc(c.url)}">${esc(c.repo)}</a> <span>${esc(c.text)}</span></li>`).join("")}</ul>
+      ${o.all ? `<p class="more"><a href="${esc(o.all)}">All my merged upstream pull requests →</a></p>` : ""}</div>
+      <div><h3>Daily drivers</h3><ul class="toolset">${(o.tools || []).map((t) => `<li><a href="${esc(t.url)}">${esc(t.name)}</a> <span>${esc(t.note)}</span></li>`).join("")}</ul></div>
+    </div></section>`
     : "";
 
 const skills = (items = []) =>
@@ -217,8 +229,23 @@ aside .skill { margin-bottom: 18px; }
 aside .skill h3, aside .edu h3 { font-size: 15px; }
 aside .tags { margin-top: 8px; }
 .edu p { margin: 2px 0; color: var(--soft); }
+.oss { margin-top: 8px; }
+.oss h2::before { background: var(--brand); }
+.oss .lede { max-width: 72ch; color: var(--soft); margin: 0 0 20px; }
+.oss-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; }
+.oss h3 { font-size: 15px; margin-bottom: 10px; }
+.toolset { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.toolset li { position: relative; padding-left: 20px; margin: 0; }
+.toolset li::before { content: ""; position: absolute; left: 0; top: .45em; width: 9px; height: 10.4px; background: var(--brand); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.toolset a { font-weight: 600; color: var(--fg); text-decoration: none; }
+.toolset a:hover { color: var(--accent); }
+.toolset span { color: var(--soft); }
+.toolset span::before { content: "— "; color: var(--muted); }
+.oss .more { margin: 14px 0 0; font: 13px var(--mono); }
+.oss .more a { color: var(--accent); }
 @media (max-width: 860px) {
   .cols { grid-template-columns: 1fr; gap: 0; }
+  .oss-grid { grid-template-columns: 1fr; gap: 28px; }
   .top { grid-template-columns: auto minmax(0, 1fr); }
   .actions { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; }
   .photo { --w: 96px; }
@@ -455,6 +482,7 @@ export function render(resume) {
     <main>${main}</main>
     <aside>${side}</aside>
   </div>
+  ${openSource(resume.openSource)}
 </div>
 <script>${LATTICE}${HEXFACE}${REVEAL}</script>
 </body>

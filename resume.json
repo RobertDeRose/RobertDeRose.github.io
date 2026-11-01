@@ -4,7 +4,7 @@
     "label": "Systems & Platform Engineering | Embedded Linux & IoT",
     "image": "img/avatar.png",
     "url": "https://robertderose.github.io",
-    "summary": "I build the software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD that ships it. Seventeen years across Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nFor 3 years I've been the sole engineer behind SFERO, Checkpoint's best-selling new product, and the CI/CD the whole company ships on. Since 2025 I've worked agent-first with models from Anthropic and OpenAI, using spec-driven development and Beads. Working this way, I made a ~64K-line custom DDS messaging prototype unnecessary by packaging Zenoh with an MQTT bridge in ~2 weeks, and rewrote our RFID platform in my spare time.",
+    "summary": "I build the software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD that ships it. Shipping software since 2009 in Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nFor 3 years I've been the sole engineer behind SFERO, Checkpoint's best-selling new product (now on 5,000+ devices), and the CI/CD the whole company ships on. Since 2025 I've worked agent-first with models from Anthropic and OpenAI, using spec-driven development and Beads. Working this way, I made a ~64K-line custom DDS messaging prototype unnecessary by packaging Zenoh with an MQTT bridge in ~2 weeks.",
     "profiles": [
       {
         "network": "LinkedIn",
@@ -24,17 +24,19 @@
       "position": "Senior Software Engineer",
       "location": "Thorofare, NJ",
       "startDate": "2019-09-19",
-      "summary": "Sole engineer leading SFERO, Checkpoint's best-selling new product, for 3+ years; build the shared embedded Linux, messaging, and release infrastructure.",
+      "summary": "Sole engineer leading SFERO, Checkpoint's best-selling new product, for 3+ years: 5,000+ devices, with hundreds more installed every month.",
       "highlights": [
-        "Replaced a colleague's multicast-based messaging proof of concept, ~64K lines of custom Data Distribution Service (DDS) code built over 5 months, with a packaged Zenoh/MQTT platform in ~2 weeks: added mutual TLS (mTLS) across the device fleet, adapted their per-application leader election, and built a React operator console",
-        "Rewrote our RFID loss-prevention platform from scratch in Elixir/OTP in my spare time over ~3.5 months, using OTP's distribution and fault tolerance for restart-safe alarm processing that never replays an alarm, and alarm strategies operators can change without new code, in the UI or through APIs for external integrators",
-        "Upgraded every UI from React 17 and PatternFly 4 to React 19 and PatternFly 6 on Vite with custom mise tooling, and updated the Copier templates to use it; migrated Flask dashboards into Cockpit modules, removing ~77K lines of legacy code",
-        "On my own initiative, rebuilt the provisioning app in Rust/Tauri, backed by a server secured with Microsoft Entra ID: only approved employees and contractors can sign in to receive the device credentials it needs to automate setup, and those secrets stay in the macOS Keychain or Windows Credential Manager",
+        "Replaced a multicast-based messaging proof of concept, ~64K lines of custom Data Distribution Service (DDS) code built over 5 months, with a packaged Zenoh/MQTT platform in ~2 weeks: added mutual TLS (mTLS) across the device fleet, adapted its per-application leader election, and built a React operator console",
+        "Rewrote every device UI as React 19 and PatternFly 6 modules on Vite with custom mise tooling, replacing Cockpit modules built from raw HTML and JavaScript that drove Bash scripts; consolidated overlapping modules, updated the Copier templates to match, and packaged a customized Cockpit build with Entra ID sign-in built in; migrated Flask dashboards into Cockpit, removing ~77K lines of legacy code",
+        "Rebuilt the provisioning app in Rust/Tauri, now used by every approved employee and contractor: a server secured with Microsoft Entra ID gives the app the device credentials it needs to automate setup, and those secrets stay in the macOS Keychain or Windows Credential Manager",
         "Introduced AI-assisted development across the team's repositories: spec-driven development with AI coding agents (Claude Code, Codex), Beads for task tracking and agent memory, and gated code review, taking the team from delegating small agent tasks to delivering whole projects with agents",
-        "Set the company's packaging and release standard: built and operate the shared CI/CD the whole company relies on, reusable GitHub Actions on a custom, spec-tested Bash framework that builds and tests Debian packages for Python, Rust, TypeScript, and generic projects on arm64 and amd64 across all three supported Ubuntu LTS releases, adopted by 30+ repositories in 3 global offices",
+        "As a spare-time side project, prototyped an Elixir/OTP successor to our RFID loss-prevention platform, with restart-safe alarm processing that never replays an alarm, and alarm strategies that operators change in the UI, or integrators change through APIs, without new code",
+        "Set the company's packaging and release standard: built and operate the shared CI/CD the whole company relies on, adopted by 30+ repositories in 3 global offices. Its reusable GitHub Actions run on a custom, spec-tested Bash framework that builds and tests Debian packages for Python, Rust, TypeScript, and generic projects on arm64 and amd64, across all three supported Ubuntu LTS releases",
         "Rebuilt the company's custom APT repository server, replacing hours-long cron-driven index rebuilds with filesystem watchers and a cached package index: packages now publish within a minute, concurrent publishes no longer corrupt the index, and build-and-test cycles dropped from hours to minutes",
-        "Built a self-hosted GitHub Actions runner platform for the company's in-house infrastructure and legacy constraints, with weekly self-updates from a scheduled workflow and a Debian caching proxy to speed up builds",
+        "Built a self-hosted GitHub Actions runner platform with ephemeral runners: builds run 10x faster and are reproducible, because no build can quietly depend on packages another pipeline left behind; runners self-update weekly and share a Debian caching proxy",
         "As sole engineer, redesigned the device OS support packages from the ground up around Linux standards instead of home-grown conventions: product-independent Debian packages, monorepo support in the shared CI/CD, and ~44K fewer lines of legacy code; led EN 18031 security hardening across authentication, SSH access, and rate limiting",
+        "Removed a custom root-owned Python proxy that executed any logged-in user's requests as root, replacing it with sudo rules, polkit, and Cockpit's native APIs so each role can run only the actions it needs",
+        "Added OpenID Connect (OIDC) sign-in through Microsoft Entra ID to the device UIs, replacing a shared username and password with individual company accounts and role-based access",
         "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
         "Automated builds of CPython 3.11–3.15 Debian packages tuned with profile-guided optimization (PGO) and link-time optimization (LTO) for three Ubuntu LTS releases, standardizing Python across product lines",
         "Built a cross-platform device provisioning app in Python/Flet that configures devices offline over SSH",
@@ -43,7 +45,7 @@
       "printHighlights": [
         "Replaced a 5-month, ~64K-line DDS prototype with Zenoh/MQTT in 2 weeks",
         {
-          "text": "Set the company's CI/CD and packaging standard (30+ repos, 3 offices)",
+          "text": "Set the company's CI/CD standard (30+ repos, 3 offices); 10x faster builds",
           "preAI": true
         },
         {
@@ -54,27 +56,29 @@
           "text": "Cut APT repository publishing from hours to under a minute",
           "preAI": true
         },
-        "Rewrote the RFID platform in Elixir/OTP solo in 3.5 spare-time months",
-        "Built a Rust/Tauri provisioning app with Entra ID-gated secrets"
+        "Rebuilt every device UI in React 19 with Entra ID sign-in via OIDC",
+        "Built a Rust/Tauri provisioning app used by all approved staff and contractors"
       ],
       "highlightGroups": [
         {
           "title": "With AI coding agents (2025–present)",
           "highlights": [
-            "Replaced a colleague's multicast-based messaging proof of concept, ~64K lines of custom Data Distribution Service (DDS) code built over 5 months, with a packaged Zenoh/MQTT platform in ~2 weeks: added mutual TLS (mTLS) across the device fleet, adapted their per-application leader election, and built a React operator console",
-            "Rewrote our RFID loss-prevention platform from scratch in Elixir/OTP in my spare time over ~3.5 months, using OTP's distribution and fault tolerance for restart-safe alarm processing that never replays an alarm, and alarm strategies operators can change without new code, in the UI or through APIs for external integrators",
-            "Upgraded every UI from React 17 and PatternFly 4 to React 19 and PatternFly 6 on Vite with custom mise tooling, and updated the Copier templates to use it; migrated Flask dashboards into Cockpit modules, removing ~77K lines of legacy code",
-            "On my own initiative, rebuilt the provisioning app in Rust/Tauri, backed by a server secured with Microsoft Entra ID: only approved employees and contractors can sign in to receive the device credentials it needs to automate setup, and those secrets stay in the macOS Keychain or Windows Credential Manager",
-            "Introduced AI-assisted development across the team's repositories: spec-driven development with AI coding agents (Claude Code, Codex), Beads for task tracking and agent memory, and gated code review, taking the team from delegating small agent tasks to delivering whole projects with agents"
+            "Replaced a multicast-based messaging proof of concept, ~64K lines of custom Data Distribution Service (DDS) code built over 5 months, with a packaged Zenoh/MQTT platform in ~2 weeks: added mutual TLS (mTLS) across the device fleet, adapted its per-application leader election, and built a React operator console",
+            "Rewrote every device UI as React 19 and PatternFly 6 modules on Vite with custom mise tooling, replacing Cockpit modules built from raw HTML and JavaScript that drove Bash scripts; consolidated overlapping modules, updated the Copier templates to match, and packaged a customized Cockpit build with Entra ID sign-in built in; migrated Flask dashboards into Cockpit, removing ~77K lines of legacy code",
+            "Rebuilt the provisioning app in Rust/Tauri, now used by every approved employee and contractor: a server secured with Microsoft Entra ID gives the app the device credentials it needs to automate setup, and those secrets stay in the macOS Keychain or Windows Credential Manager",
+            "Introduced AI-assisted development across the team's repositories: spec-driven development with AI coding agents (Claude Code, Codex), Beads for task tracking and agent memory, and gated code review, taking the team from delegating small agent tasks to delivering whole projects with agents",
+            "As a spare-time side project, prototyped an Elixir/OTP successor to our RFID loss-prevention platform, with restart-safe alarm processing that never replays an alarm, and alarm strategies that operators change in the UI, or integrators change through APIs, without new code"
           ]
         },
         {
           "title": "Before AI coding agents (2019–2024)",
           "highlights": [
-            "Set the company's packaging and release standard: built and operate the shared CI/CD the whole company relies on, reusable GitHub Actions on a custom, spec-tested Bash framework that builds and tests Debian packages for Python, Rust, TypeScript, and generic projects on arm64 and amd64 across all three supported Ubuntu LTS releases, adopted by 30+ repositories in 3 global offices",
+            "Set the company's packaging and release standard: built and operate the shared CI/CD the whole company relies on, adopted by 30+ repositories in 3 global offices. Its reusable GitHub Actions run on a custom, spec-tested Bash framework that builds and tests Debian packages for Python, Rust, TypeScript, and generic projects on arm64 and amd64, across all three supported Ubuntu LTS releases",
             "Rebuilt the company's custom APT repository server, replacing hours-long cron-driven index rebuilds with filesystem watchers and a cached package index: packages now publish within a minute, concurrent publishes no longer corrupt the index, and build-and-test cycles dropped from hours to minutes",
-            "Built a self-hosted GitHub Actions runner platform for the company's in-house infrastructure and legacy constraints, with weekly self-updates from a scheduled workflow and a Debian caching proxy to speed up builds",
+            "Built a self-hosted GitHub Actions runner platform with ephemeral runners: builds run 10x faster and are reproducible, because no build can quietly depend on packages another pipeline left behind; runners self-update weekly and share a Debian caching proxy",
             "As sole engineer, redesigned the device OS support packages from the ground up around Linux standards instead of home-grown conventions: product-independent Debian packages, monorepo support in the shared CI/CD, and ~44K fewer lines of legacy code; led EN 18031 security hardening across authentication, SSH access, and rate limiting",
+            "Removed a custom root-owned Python proxy that executed any logged-in user's requests as root, replacing it with sudo rules, polkit, and Cockpit's native APIs so each role can run only the actions it needs",
+            "Added OpenID Connect (OIDC) sign-in through Microsoft Entra ID to the device UIs, replacing a shared username and password with individual company accounts and role-based access",
             "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
             "Automated builds of CPython 3.11–3.15 Debian packages tuned with profile-guided optimization (PGO) and link-time optimization (LTO) for three Ubuntu LTS releases, standardizing Python across product lines",
             "Built a cross-platform device provisioning app in Python/Flet that configures devices offline over SSH",
@@ -90,26 +94,26 @@
       "startDate": "2018",
       "endDate": "2019-09",
       "highlights": [
-        "Built an automated upgrade system that let government customers upgrade straight from several major versions behind to the latest release instead of one version at a time, saving technicians hours to days per upgrade",
-        "Designed its database migration engine for MySQL, Microsoft SQL Server, and Actian Zen (PSQL), absorbing years of schema changes previously tracked by hand in Excel",
+        "Built an automated upgrade system that took government customers straight from several major versions behind to the latest release, instead of one version at a time, saving technicians hours to days per upgrade",
+        "Designed the upgrade system's database migration engine for MySQL, Microsoft SQL Server, and Actian Zen (PSQL), absorbing years of schema changes previously tracked by hand in Excel",
         "Led a team of three developers integrating Orbeon Forms into the product",
         "Built a JavaFX application to install and manage the product's Windows services",
         "Moved the entire codebase from System.out.println to Apache Log4j 2 with a script that analyzed each call's context",
         "Migrated all source code from Subversion to Git and set up GitLab CI/CD"
       ],
       "printHighlights": [
-        "Built automated upgrades that took customers from several major versions behind straight to the latest, saving techs hours to days"
+        "Built one-step upgrades across major versions, saving techs hours to days"
       ]
     },
     {
-      "name": "Linode, Inc",
+      "name": "Linode, Inc.",
       "position": "Developer",
       "location": "Galloway, NJ",
       "startDate": "2015",
       "endDate": "2018",
       "highlights": [
         "Personally built Linode's OAuth 2.0 platform, integrating the legacy ColdFusion website and the new Python API service: single sign-on (SSO) for Linode's apps, an OAuth provider for third-party apps, and a custom SSH PAM module that authenticated access to Linode's SSH console with optional two-factor authentication (2FA)",
-        "Built reproducible local development environments, first with Vagrant and SaltStack configuration management and then Docker Compose, moving the whole stack off real servers so anyone in the company could contribute; one support engineer it opened the door for became one of the team's best developers",
+        "Built reproducible local development environments, first with Vagrant and SaltStack, then with Docker Compose, moving the whole stack off physical servers so anyone in the company could contribute; one support engineer who started contributing this way became one of the team's best developers",
         "Championed and implemented the OpenAPI 3 specification for Linode API v4",
         "Managed Jenkins continuous integration (CI) with GitHub Enterprise for automated testing and code quality checks"
       ],
@@ -119,7 +123,7 @@
       ]
     },
     {
-      "name": "Mitel (formerly Ulticom, Inc)",
+      "name": "Mitel (formerly Ulticom, Inc.)",
       "position": "Software Engineer",
       "location": "Mount Laurel, NJ",
       "startDate": "2011",
@@ -139,7 +143,7 @@
       "endDate": "2010",
       "highlights": [
         "Developed an IP reputation system for Amazon Simple Email Service (SES) with Spring, Hibernate, and Amazon RDS",
-        "Built email deliverability monitoring that detected mail providers marking messages as junk, tracking the reputation of Amazon's mail transfer agents (MTAs)"
+        "Built email deliverability monitoring that tracked the reputation of Amazon's mail transfer agents (MTAs) by detecting when mail providers marked messages as junk"
       ],
       "printHighlights": []
     }
@@ -153,7 +157,7 @@
       "highlights": [
         "Contract-enforced client/server E2E test harness",
         "Remote SSH through lease-bound tunnel credentials, a sandboxed Starlark scripting system, and command allowlist policies",
-        "Releases ship .deb, .rpm, and .run packages and container images from CI, with a Docusaurus docs and product site"
+        "Releases ship .deb, .rpm, and .run packages and container images from CI, with a Docusaurus site for docs and product pages"
       ],
       "keywords": [
         "Go",
@@ -198,7 +202,7 @@
       "startDate": "2026",
       "description": "libkrun virtualization runtime for Apple's container; reclaims freed memory for macOS.",
       "highlights": [
-        "Feature parity on exec, volumes, virtio-fs, and port forwarding, and macOS reclaims memory the guest releases while it runs",
+        "Feature parity for exec, volumes, virtio-fs, and port forwarding, plus memory the guest frees going back to macOS while it runs",
         "Built a native vmnet virtio-net backend in libkrun (Rust) with packed rings, multiqueue TX, and batched syscalls"
       ],
       "keywords": [
@@ -259,16 +263,17 @@
       "description": "Fixes in docker-library/python, mise, libkrun, and paho-mqtt.",
       "highlights": [
         "docker-library/python (official image, 9B+ pulls): found and fixed a silent regression that skipped profile-guided optimization across 37 Dockerfile variants",
-        "jdx/mise and jdx/hk: OS/architecture tool filtering, and step settings inherited from groups",
+        "jdx/mise: OS/architecture compound filters for tool installs",
         "libkrun: released leaked vsock proxies after a clean guest shutdown",
-        "eclipse-paho/paho.mqtt.python, cruft, himmelblau, aube, and zensical: reconnect, packaging, and build fixes"
+        "eclipse-paho/paho.mqtt.python, Himmelblau, and aube: reconnect and packaging fixes"
       ],
       "color": "#6f9cff",
       "printHighlights": [
         "docker-library/python (9B+ pulls): fixed PGO silently skipped in 37 variants",
         "jdx/mise: OS/architecture tool filtering",
         "libkrun: fixed vsock proxy resource leaks on clean shutdown"
-      ]
+      ],
+      "printOnly": true
     }
   ],
   "education": [
@@ -381,8 +386,6 @@
         "Anthropic and OpenAI models (Claude Code, Codex)",
         "OpenCode",
         "local models",
-        "Orca",
-        "T3 Code",
         "spec-driven development",
         "Beads"
       ]
@@ -390,5 +393,74 @@
   ],
   "meta": {
     "theme": "jsonresume-theme-hexways"
+  },
+  "openSource": {
+    "title": "Tools I love and support",
+    "summary": "When I find a tool I love, I support it, usually with a pull request. Here are some contributions I'm proud of, and the tools I use every day.",
+    "tools": [
+      {
+        "name": "mise-en-place",
+        "url": "https://mise.jdx.dev",
+        "note": "dev tools, env vars, and tasks in one file; it builds this site"
+      },
+      {
+        "name": "Helix",
+        "url": "https://helix-editor.com",
+        "note": "my editor: modal editing with tree-sitter and language servers built in"
+      },
+      {
+        "name": "hk",
+        "url": "https://hk.jdx.dev",
+        "note": "fast git hooks and project lints"
+      },
+      {
+        "name": "aube",
+        "url": "https://aube.sh",
+        "note": "a fast Node.js package manager"
+      },
+      {
+        "name": "uv",
+        "url": "https://docs.astral.sh/uv",
+        "note": "a fast Python package and project manager"
+      },
+      {
+        "name": "Worktrunk",
+        "url": "https://worktrunk.dev",
+        "note": "git worktrees for working on several branches at once"
+      }
+    ],
+    "contributions": [
+      {
+        "repo": "libkrun",
+        "url": "https://github.com/libkrun/libkrun/pull/852",
+        "text": "released vsock proxies after a clean guest shutdown, so long-running hosts stop leaking them"
+      },
+      {
+        "repo": "aube",
+        "url": "https://github.com/aubepkg/aube/pull/1387",
+        "text": "kept arm64 release builds compatible with glibc 2.31, so they still run on older Debian and Ubuntu"
+      },
+      {
+        "repo": "mise",
+        "url": "https://github.com/jdx/mise/pull/9088",
+        "text": "added os/arch compound filters, so a tool can install on linux/arm64 only"
+      },
+      {
+        "repo": "Himmelblau",
+        "url": "https://github.com/himmelblau-idm/himmelblau/pull/723",
+        "text": "added aarch64 packages for Debian-based distributions"
+      },
+      {
+        "repo": "docker-library/python",
+        "url": "https://github.com/docker-library/python/pull/980",
+        "text": "fixed profile-guided optimization silently skipped across 37 variants of the official image"
+      },
+      {
+        "repo": "paho-mqtt (Python)",
+        "url": "https://github.com/eclipse-paho/paho.mqtt.python/pull/686",
+        "text": "fixed a random crash on startup when the socket wasn't ready yet, so the client reconnects instead"
+      }
+    ],
+    "all": "https://github.com/search?q=is%3Apr+author%3ARobertDeRose+is%3Amerged+-user%3ARobertDeRose&type=pullrequests"
   }
 }
