@@ -39,6 +39,7 @@
         "Strengthened device security by replacing custom privilege handling with standard sudo rules, polkit, and Cockpit's native APIs, so each role can run only the actions it needs",
         "Added OpenID Connect (OIDC) sign-in through Microsoft Entra ID to the device UIs, giving each person an individual company account with role-based access",
         "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
+        "Built a generic GPIO REST service that drives on-board CPU GPIO and I2C expanders, latched or unlatched, behind one interface; supporting a new device takes only a YAML file describing its pins",
         "Automated builds of CPython 3.11–3.15 Debian packages tuned with profile-guided optimization (PGO) and link-time optimization (LTO) for three Ubuntu LTS releases, standardizing Python across product lines",
         "Built a cross-platform device provisioning app in Python/Flet that configures devices offline over SSH",
         "Made the standard the default: reusable Copier project templates give every new project the shared CI/CD, Debian packaging, and UI tooling from day one, including the REST service template behind Checkpoint's Readfinity Core RFID reader software"
@@ -81,6 +82,7 @@
             "Strengthened device security by replacing custom privilege handling with standard sudo rules, polkit, and Cockpit's native APIs, so each role can run only the actions it needs",
             "Added OpenID Connect (OIDC) sign-in through Microsoft Entra ID to the device UIs, giving each person an individual company account with role-based access",
             "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
+            "Built a generic GPIO REST service that drives on-board CPU GPIO and I2C expanders, latched or unlatched, behind one interface; supporting a new device takes only a YAML file describing its pins",
             "Automated builds of CPython 3.11–3.15 Debian packages tuned with profile-guided optimization (PGO) and link-time optimization (LTO) for three Ubuntu LTS releases, standardizing Python across product lines",
             "Built a cross-platform device provisioning app in Python/Flet that configures devices offline over SSH",
             "Made the standard the default: reusable Copier project templates give every new project the shared CI/CD, Debian packaging, and UI tooling from day one, including the REST service template behind Checkpoint's Readfinity Core RFID reader software"
