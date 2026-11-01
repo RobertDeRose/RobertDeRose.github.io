@@ -4,7 +4,7 @@
     "label": "Systems & Platform Engineering | Embedded Linux & IoT",
     "image": "img/avatar.webp",
     "url": "https://robertderose.github.io",
-    "summary": "I build software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD to ship it. Shipping code since 2009 in Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nFor 3 years I've been the sole engineer behind SFERO, Checkpoint's best-selling new product (now on 5,000+ devices), and the CI/CD the whole company ships on. Since 2025 I've worked agent-first with models from Anthropic and OpenAI, using spec-driven development and Beads. Working this way, I made a ~64K-line custom DDS messaging prototype unnecessary by packaging Zenoh with an MQTT bridge in ~2 weeks.",
+    "summary": "I build software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD to ship it. Shipping code since 2010 in Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nFor 3 years I've been the lead engineer for SFERO, Checkpoint's best-selling new product, with large deployments worldwide, and for the CI/CD the whole company ships on. Since 2025 I've worked agent-first with models from Anthropic and OpenAI, using spec-driven development and Beads. Working this way, I made a ~64K-line custom DDS messaging prototype unnecessary by packaging Zenoh with an MQTT bridge in ~2 weeks.",
     "profiles": [
       {
         "network": "LinkedIn",
@@ -17,7 +17,7 @@
         "url": "https://github.com/RobertDeRose"
       }
     ],
-    "printSummary": "I build software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD to ship it. Shipping code since 2009 in Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nSole engineer behind SFERO, Checkpoint's best-selling new product on 5,000+ devices, and the company's CI/CD. Working agent-first, I replaced a ~64K-line custom DDS prototype with Zenoh and an MQTT bridge in ~2 weeks."
+    "printSummary": "I build software that bridges hardware and the cloud: embedded Linux, IoT device management, mesh messaging, and the CI/CD to ship it. Shipping code since 2010 in Python, Java, Elixir, Go, Rust, TypeScript, and Nix: the right tool for each job.\n\nLead engineer for SFERO, Checkpoint's best-selling new product with large deployments worldwide, and the company's CI/CD. Working agent-first, I replaced a ~64K-line custom DDS prototype with Zenoh and an MQTT bridge in ~2 weeks."
   },
   "work": [
     {
@@ -25,7 +25,7 @@
       "position": "Senior Software Engineer",
       "location": "Thorofare, NJ",
       "startDate": "2019-09-19",
-      "summary": "Sole engineer leading SFERO, Checkpoint's best-selling new product, for 3+ years: 5,000+ devices, with hundreds more installed every month.",
+      "summary": "Lead engineer for SFERO, Checkpoint's best-selling new product, since 2023, with large deployments worldwide.",
       "highlights": [
         "Replaced a multicast-based messaging proof of concept, ~64K lines of custom Data Distribution Service (DDS) code built over 5 months, with a packaged Zenoh/MQTT platform in ~2 weeks: added mutual TLS (mTLS) across the device fleet, adapted its per-application leader election, and built a React operator console",
         "Rewrote every device UI as React 19 and PatternFly 6 modules on Vite with custom mise tooling, replacing Cockpit modules built from raw HTML and JavaScript that drove Bash scripts; consolidated overlapping modules, updated the Copier templates to match, and packaged a customized Cockpit build with Entra ID sign-in built in; migrated Flask dashboards into Cockpit, removing ~77K lines of legacy code",
@@ -35,7 +35,7 @@
         "Set the company's packaging and release standard: built and operate the shared CI/CD the whole company relies on, adopted by 30+ repositories in 3 global offices. Its reusable GitHub Actions run on a custom, spec-tested Bash framework that builds and tests Debian packages for Python, Rust, TypeScript, and generic projects on arm64 and amd64, across all three supported Ubuntu LTS releases",
         "Rebuilt the company's custom APT repository server, replacing hours-long cron-driven index rebuilds with filesystem watchers and a cached package index: packages now publish within a minute, concurrent publishes no longer corrupt the index, and build-and-test cycles dropped from hours to minutes",
         "Built a self-hosted GitHub Actions runner platform with ephemeral runners: builds run 10x faster and are reproducible, because no build can quietly depend on packages another pipeline left behind; runners self-update weekly and share a Debian caching proxy",
-        "As sole engineer, redesigned the device OS support packages from the ground up around Linux standards instead of home-grown conventions: product-independent Debian packages, monorepo support in the shared CI/CD, and ~44K fewer lines of legacy code; led EN 18031 security hardening across authentication, SSH access, and rate limiting",
+        "As lead engineer, redesigned the device OS support packages from the ground up around Linux standards instead of home-grown conventions: product-independent Debian packages, monorepo support in the shared CI/CD, and ~44K fewer lines of legacy code; led EN 18031 security hardening across authentication, SSH access, and rate limiting",
         "Removed a custom root-owned Python proxy that executed any logged-in user's requests as root, replacing it with sudo rules, polkit, and Cockpit's native APIs so each role can run only the actions it needs",
         "Added OpenID Connect (OIDC) sign-in through Microsoft Entra ID to the device UIs, replacing a shared username and password with individual company accounts and role-based access",
         "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
@@ -50,7 +50,7 @@
           "preAI": true
         },
         {
-          "text": "Redesigned the device OS on Linux standards solo; led EN 18031 hardening",
+          "text": "Redesigned the device OS on Linux standards; led EN 18031 hardening",
           "preAI": true
         },
         {
@@ -77,7 +77,7 @@
             "Set the company's packaging and release standard: built and operate the shared CI/CD the whole company relies on, adopted by 30+ repositories in 3 global offices. Its reusable GitHub Actions run on a custom, spec-tested Bash framework that builds and tests Debian packages for Python, Rust, TypeScript, and generic projects on arm64 and amd64, across all three supported Ubuntu LTS releases",
             "Rebuilt the company's custom APT repository server, replacing hours-long cron-driven index rebuilds with filesystem watchers and a cached package index: packages now publish within a minute, concurrent publishes no longer corrupt the index, and build-and-test cycles dropped from hours to minutes",
             "Built a self-hosted GitHub Actions runner platform with ephemeral runners: builds run 10x faster and are reproducible, because no build can quietly depend on packages another pipeline left behind; runners self-update weekly and share a Debian caching proxy",
-            "As sole engineer, redesigned the device OS support packages from the ground up around Linux standards instead of home-grown conventions: product-independent Debian packages, monorepo support in the shared CI/CD, and ~44K fewer lines of legacy code; led EN 18031 security hardening across authentication, SSH access, and rate limiting",
+            "As lead engineer, redesigned the device OS support packages from the ground up around Linux standards instead of home-grown conventions: product-independent Debian packages, monorepo support in the shared CI/CD, and ~44K fewer lines of legacy code; led EN 18031 security hardening across authentication, SSH access, and rate limiting",
             "Removed a custom root-owned Python proxy that executed any logged-in user's requests as root, replacing it with sudo rules, polkit, and Cockpit's native APIs so each role can run only the actions it needs",
             "Added OpenID Connect (OIDC) sign-in through Microsoft Entra ID to the device UIs, replacing a shared username and password with individual company accounts and role-based access",
             "Led development of a Python service for provisioning, monitoring, and updating networked RFID and electronic article surveillance (EAS) readers; added support for three hardware families and over-the-air (OTA) firmware updates over MQTT",
@@ -93,7 +93,7 @@
       "position": "Senior Software Engineer",
       "location": "Northfield, NJ",
       "startDate": "2018",
-      "endDate": "2019-09",
+      "endDate": "2019",
       "highlights": [
         "Built an automated upgrade system that took government customers straight from several major versions behind to the latest release, instead of one version at a time, saving technicians hours to days per upgrade",
         "Designed the upgrade system's database migration engine for MySQL, Microsoft SQL Server, and Actian Zen (PSQL), absorbing years of schema changes previously tracked by hand in Excel",
@@ -140,7 +140,7 @@
       "name": "Amazon.com",
       "position": "Software Engineer (Intern)",
       "location": "Seattle, WA",
-      "startDate": "2009",
+      "startDate": "2010",
       "endDate": "2010",
       "highlights": [
         "Developed an IP reputation system for Amazon Simple Email Service (SES) with Spring, Hibernate, and Amazon RDS",

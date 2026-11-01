@@ -47,7 +47,7 @@ function date(s) {
   return m ? `${MONTHS[+m - 1]} ${y}` : y;
 }
 const initials = (n = "") => n.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
-const range = (a, b) => `${date(a)} – ${b ? date(b) : "Present"}`;
+const range = (a, b) => (b && date(a) === date(b) ? date(a) : `${date(a)} – ${b ? date(b) : "Present"}`);
 
 // cls lets a job carry separate web and print bullets (printHighlights).
 const list = (items = [], cls = "") =>
