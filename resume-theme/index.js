@@ -210,14 +210,15 @@ button.btn { border: 0; cursor: pointer; }
 .cols { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; margin-top: 40px; }
 section { margin-bottom: 44px; }
 h2 { font: 500 13px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin: 0 0 20px; display: flex; align-items: center; gap: 12px; }
-h2::before { content: ""; width: 12px; height: 14px; background: var(--accent); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+/* Section hexes, timeline markers, and the line share one centre, 6.5px in from the section edge. */
+h2::before { content: ""; flex: none; width: 12px; height: 14px; margin-left: .5px; background: var(--accent); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
 h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 h3 { margin: 0; font-size: 19px; line-height: 1.3; letter-spacing: -.01em; }
 .when { font: 13px var(--mono); color: var(--muted); }
 .where { font-size: 14px; color: var(--muted); }
 .job { position: relative; padding: 0 0 28px 28px; border-left: 1px solid var(--line); margin-left: 6px; }
-.job::before { content: ""; position: absolute; left: -8px; top: 3px; width: 15px; height: 17.3px; background: var(--accent); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
-.job::after { content: ""; position: absolute; left: -5px; top: 6.5px; width: 9px; height: 10.4px; background: var(--bg); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.job::before { content: ""; position: absolute; left: -6.5px; top: 3px; width: 12px; height: 14px; background: var(--accent); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.job::after { content: ""; position: absolute; left: -5.1px; top: 4.6px; width: 9.2px; height: 10.8px; background: var(--bg); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
 .job:last-child { padding-bottom: 0; }
 .print-only { display: none; }
 .era { font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 16px 0 6px; }
@@ -331,22 +332,23 @@ aside .tags { margin-top: 8px; }
 
   /* Hex bullets: a graphite gradient rim with a lighter core so they read as hexagons on paper. */
   :root { --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); --rim: linear-gradient(160deg, #8a92a3, #1d2230 75%); --slate: #4a5264; }
-  h2::before { width: 10px; height: 11.5px; background: var(--rim); }
+  h2::before { width: 10px; height: 11.5px; margin-left: 1.5px; background: var(--rim); }
   h2::after { background: linear-gradient(90deg, #8d95a6, #e4e7ed 60%, transparent); }
-  .job::before { left: -6px; top: 3px; width: 11px; height: 12.7px; background: var(--slate); box-shadow: none; }
-  .job::after { content: ""; position: absolute; left: -3px; top: 6.5px; width: 5px; height: 5.8px; background: #fff; clip-path: var(--hex); }
+  /* Timeline markers: a slate hex outline drawn as SVG, with a white margin so the line stops short of its points. */
+  .job::before { left: -6.5px; top: 1.8px; width: 12px; height: 13.86px; clip-path: none; box-shadow: none; background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 13.856'><polygon points='6.000,0.000 12.000,3.464 12.000,10.392 6.000,13.856 0.000,10.392 0.000,3.464' fill='%23fff'/><polygon points='6.000,1.728 10.503,4.328 10.503,9.528 6.000,12.128 1.497,9.528 1.497,4.328' fill='%23fff' stroke='%234a5264' stroke-width='1.1' stroke-linejoin='miter'/></svg>") center / contain no-repeat; }
+  .job::after { display: none; }
   .job { border-left-color: var(--slate); }
   .job ul:not(.web-only) { list-style: none; padding-left: 14px; }
   .job ul:not(.web-only) li { position: relative; }
   .job ul:not(.web-only) li::before, .hx { content: ""; position: absolute; left: -14px; top: .24em; width: 9px; height: 10.4px; background: var(--rim); clip-path: var(--hex); }
-  li.pre::after, .hx::after { content: ""; position: absolute; left: -11.5px; top: calc(.24em + 2.9px); width: 4px; height: 4.6px; background: #fff; clip-path: var(--hex); }
+  li.pre::after, .hx::after { content: ""; position: absolute; left: -12.9px; top: calc(.24em + 1.25px); width: 6.8px; height: 7.9px; background: #fff; clip-path: var(--hex); }
   .hx { position: relative; display: inline-block; left: 0; top: .05em; }
-  .hx::after { left: 2.5px; top: 2.9px; }
+  .hx::after { left: 1.1px; top: 1.25px; }
   /* Projects: a slate rail runs down the bullet column so the colored hexes pop; the Experience timeline shares its color. */
   .picks { position: relative; }
-  .picks::before { content: ""; position: absolute; left: 0; top: -3px; bottom: -3px; width: 15px; border-radius: 8px; background: var(--slate); }
+  .picks::before { content: ""; position: absolute; left: 0; top: -3px; bottom: -3px; width: 13px; border-radius: 7px; background: var(--slate); }
   .picks li { padding-left: 21px; }
-  .picks li::before { left: 2px; top: .22em; width: 11px; height: 12.7px; background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 75%, #fff), var(--pc) 70%); }
+  .picks li::before { left: 1px; top: .22em; width: 11px; height: 12.7px; background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 75%, #fff), var(--pc) 70%); }
   .picks ul { list-style: none; padding-left: 10px; }
   .picks li li { position: relative; padding: 0; }
   .picks li li::before { display: block; left: -10px; top: .3em; width: 7px; height: 8.1px; background: var(--rim); }
