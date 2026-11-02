@@ -330,20 +330,21 @@ aside .tags { margin-top: 8px; }
   .skill h3, aside .edu h3 { font-size: 9.5pt; }
   a { text-decoration: none; }
 
-  /* Hex bullets: a graphite gradient rim with a lighter core so they read as hexagons on paper. */
+  /* Print follows the website: hexagons mark sections and jobs, bullets are round, all in the accent blue. */
   :root { --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); --rim: linear-gradient(160deg, #8a92a3, #1d2230 75%); --slate: #4a5264; }
-  h2::before { width: 10px; height: 11.5px; margin-left: 1.5px; background: var(--rim); }
+  /* Odd widths so the hexes centre exactly on the 1px timeline line once Chrome snaps them to whole pixels. */
+  h2::before { width: 11px; height: 12.7px; margin-left: 1px; background: var(--accent); }
   h2::after { background: linear-gradient(90deg, #8d95a6, #e4e7ed 60%, transparent); }
-  /* Timeline markers: a slate hex outline drawn as SVG, with a white margin so the line stops short of its points. */
-  .job::before { left: -6.5px; top: 1.8px; width: 12px; height: 13.86px; clip-path: none; box-shadow: none; background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 13.856'><polygon points='6.000,0.000 12.000,3.464 12.000,10.392 6.000,13.856 0.000,10.392 0.000,3.464' fill='%23fff'/><polygon points='6.000,1.728 10.503,4.328 10.503,9.528 6.000,12.128 1.497,9.528 1.497,4.328' fill='%23fff' stroke='%234a5264' stroke-width='1.1' stroke-linejoin='miter'/></svg>") center / contain no-repeat; }
+  /* Timeline markers: a hex outline drawn as SVG (sharp points), sitting on the line as on the website. */
+  .job::before { left: -5px; top: 2.4px; width: 11px; height: 12.70px; clip-path: none; box-shadow: none; background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 12.702'><polygon points='5.500,0.550 10.524,3.450 10.524,9.251 5.500,12.152 0.476,9.251 0.476,3.450' fill='%23fff' stroke='%233b5fd6' stroke-width='1.1' stroke-linejoin='miter'/></svg>") center / contain no-repeat; }
   .job::after { display: none; }
-  .job { border-left-color: var(--slate); }
+  /* The line is a background like the marker, so both land on the same pixel grid and stay centred. */
+  .job { border-left: 0; padding-left: 29px; background: linear-gradient(#c5cad6, #c5cad6) 0 0 / 1px 100% no-repeat; }
   .job ul:not(.web-only) { list-style: none; padding-left: 14px; }
   .job ul:not(.web-only) li { position: relative; }
-  .job ul:not(.web-only) li::before, .hx { content: ""; position: absolute; left: -14px; top: .24em; width: 9px; height: 10.4px; background: var(--rim); clip-path: var(--hex); }
-  li.pre::after, .hx::after { content: ""; position: absolute; left: -12.9px; top: calc(.24em + 1.25px); width: 6.8px; height: 7.9px; background: #fff; clip-path: var(--hex); }
-  .hx { position: relative; display: inline-block; left: 0; top: .05em; }
-  .hx::after { left: 1.1px; top: 1.25px; }
+  .job ul:not(.web-only) li::before, .hx { content: ""; position: absolute; left: -11px; top: .52em; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+  .job ul:not(.web-only) li.pre::before, .hx { background: none; box-shadow: inset 0 0 0 1.1px var(--accent); }
+  .hx { position: relative; display: inline-block; left: 0; top: -.05em; }
   /* Projects: a slate rail runs down the bullet column so the colored hexes pop; the Experience timeline shares its color. */
   .picks { position: relative; }
   .picks::before { content: ""; position: absolute; left: 0; top: -3px; bottom: -3px; width: 13px; border-radius: 7px; background: var(--slate); }
@@ -351,7 +352,7 @@ aside .tags { margin-top: 8px; }
   .picks li::before { left: 1px; top: .22em; width: 11px; height: 12.7px; background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 75%, #fff), var(--pc) 70%); }
   .picks ul { list-style: none; padding-left: 10px; }
   .picks li li { position: relative; padding: 0; }
-  .picks li li::before { display: block; left: -10px; top: .3em; width: 7px; height: 8.1px; background: var(--rim); }
+  .picks li li::before { display: block; left: -9px; top: .5em; width: 4px; height: 4px; border-radius: 50%; clip-path: none; background: var(--accent); }
   .picks li li::after { display: none; }
 }
 `;
