@@ -72,7 +72,7 @@ function header(b = {}, rules = []) {
     CONTACT.email && reveal(CONTACT.email),
     CONTACT.email && printOnly(CONTACT.email, rules, "email"),
     CONTACT.phone && printOnly(CONTACT.phone, rules, "phone"),
-    b.url && `<a href="${esc(b.url)}">${esc(host(b.url))}</a>`,
+    b.url && `<a class="site" href="${esc(b.url)}">${esc(host(b.url))}</a>`,
     // Print shows the address itself, since a bare "GitHub" means nothing on paper.
     ...(b.profiles || []).map((p) => `<a href="${esc(p.url)}"><span class="web-only">${esc(p.network)}</span><span class="print-only">${esc(host(p.url).replace(/^www\./, ""))}</span></a>`),
   ].filter(Boolean);
@@ -108,12 +108,34 @@ const work = (items = []) =>
     )
     .join("");
 
+// A hex outline in one colour, as an SVG data URL for CSS backgrounds (print timeline markers).
+const hexOutline = (color) => {
+  const p = "5.500,0.550 10.524,3.450 10.524,9.251 5.500,12.152 0.476,9.251 0.476,3.450";
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 12.702'><polygon points='${p}' fill='#fff' stroke='${color}' stroke-width='1.1' stroke-linejoin='miter'/></svg>`;
+  return `url(data:image/svg+xml,${encodeURIComponent(svg).replace(/'/g, "%27")})`;
+};
+
+// Small line icons for the printed contact column.
+const ICON = {
+  email: "<rect x='1.5' y='3.5' width='13' height='9' rx='1.5' fill='none' stroke='C' stroke-width='1.4'/><path d='M2 4.5l6 4.5 6-4.5' fill='none' stroke='C' stroke-width='1.4'/>",
+  phone: "<path d='M5 1.8h2.2l1 3-1.6 1.2a8 8 0 0 0 3.4 3.4l1.2-1.6 3 1v2.2c0 .9-.7 1.6-1.6 1.6A11.4 11.4 0 0 1 3.4 3.4C3.4 2.5 4.1 1.8 5 1.8z' fill='none' stroke='C' stroke-width='1.3' stroke-linejoin='round'/>",
+  site: "<circle cx='8' cy='8' r='6.3' fill='none' stroke='C' stroke-width='1.3'/><path d='M1.8 8h12.4M8 1.7c2 2 2 10.6 0 12.6M8 1.7c-2 2-2 10.6 0 12.6' fill='none' stroke='C' stroke-width='1.1'/>",
+  linkedin: "<rect x='1' y='1' width='14' height='14' rx='2.5' fill='C'/><path d='M4.4 6.8v4.8M4.4 4.3v.1M7.3 11.6V6.8M7.3 8.9c0-1.3.9-2.1 2-2.1s1.8.8 1.8 2.1v2.7' stroke='#fff' stroke-width='1.5' stroke-linecap='round' fill='none'/>",
+  github: "<path fill='C' d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z'/>",
+};
+const iconUrl = (name, color = "#3b5fd6") =>
+  `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'>${ICON[name].replaceAll("'C'", `'${color}'`)}</svg>`)}")`;
+const CONTACT_ICONS = [
+  [".contact .pc[data-c=email]", "email"], [".contact .pc[data-c=phone]", "phone"], [".contact a.site", "site"],
+  [".contact a[href*='linkedin.com']", "linkedin"], [".contact a[href*='://github.com']", "github"],
+].map(([sel, name]) => `${sel}::after { background-image: ${iconUrl(name)}; }`).join("\n");
+
 const projects = (items = []) =>
   items.length
     ? `<ul class="picks">${items
         .map(
           (p, i) => `
-      <li${p.printOnly ? ' class="print-only"' : ""} style="--pc:${esc(p.color || PALETTE[i % PALETTE.length])}">
+      <li${p.printOnly ? ' class="print-only"' : ""} style="--pc:${esc(p.color || PALETTE[i % PALETTE.length])};--pm:${hexOutline(p.color || PALETTE[i % PALETTE.length])}">
         <h3>${p.url ? `<a href="${esc(p.url)}">${esc(p.name)}</a>` : esc(p.name)}</h3>
         ${p.description ? `<p>${esc(p.description)}</p>` : ""}
         ${list(p.printHighlights, "print-only")}
@@ -135,16 +157,7 @@ const openSource = (o) =>
     : "";
 
 const skills = (items = []) =>
-  items.map((s) => `<div class="skill"><h3>${esc(s.name)}</h3>${tags(s.keywords)}</div>`).join("");
-
-// Print skills as two explicit columns split by text length; WebKit drops CSS multi-column when paginating.
-const skillColumns = (items = []) => {
-  const size = (s) => s.name.length + (s.keywords || []).join(", ").length + 40;
-  const half = items.reduce((n, s) => n + size(s), 0) / 2;
-  let run = 0, cut = items.length;
-  for (let i = 0; i < items.length; i++) { if (run + size(items[i]) / 2 > half) { cut = i; break; } run += size(items[i]); }
-  return `<div class="skill-cols"><div>${skills(items.slice(0, cut))}</div><div>${skills(items.slice(cut))}</div></div>`;
-};
+  items.length ? `<div class="skill-list">${items.map((s) => `<div class="skill"><h3>${esc(s.name)}</h3>${tags(s.keywords)}</div>`).join("")}</div>` : "";
 
 const education = (items = []) =>
   items
@@ -284,8 +297,10 @@ aside .tags { margin-top: 8px; }
   .label { font-size: 8pt; }
   .contact { font: 8pt var(--sans); gap: 2px 9px; }
   .contact a { text-decoration: none; }
-  .summary { font-size: 10pt; margin: 6px 0 0; max-width: none; }
-  .summary p { margin: 0 0 6px; }
+  /* The summary sits in the same tinted panel as the skills, a point smaller than before. */
+  .summary { font-size: 9pt; margin: 8px 0 0; max-width: none; background: color-mix(in srgb, var(--accent) 7%, #fff); border-radius: 4px; padding: 7px 10px; }
+  .summary p { margin: 0 0 4px; }
+  .summary p:last-child { margin-bottom: 0; }
   .cols { grid-template-columns: minmax(0, 1fr) 230px; gap: 20px; margin-top: 12px; }
   section { margin-bottom: 9px; }
   h2 { font-size: 8pt; margin-bottom: 10px; }
@@ -297,7 +312,7 @@ aside .tags { margin-top: 8px; }
   .job p.key { margin: 2px 0 0; font: 7.5pt var(--mono); color: var(--muted); }
   .contact .print-only { display: inline; }
   /* The PDF build lays contact details out but leaves them blank; the download button writes them in. */
-  .pdf-build .pc { visibility: hidden; }
+  .pdf-build .pc > span { visibility: hidden; }
   .job h3, .job .when { break-after: avoid; }
   .job:not(:has(ul:not(.web-only))) { padding-bottom: 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
   .job:not(:has(ul:not(.web-only))) .when { order: 2; }
@@ -309,7 +324,6 @@ aside .tags { margin-top: 8px; }
   li { margin-bottom: 1px; }
   .tags { margin-top: 5px; gap: 4px; }
   .tags span { font-size: 7.5pt; padding: 0 5px; color: var(--soft); }
-  .skill-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
   .skill { break-inside: avoid; margin-bottom: 6px; font-size: 8.5pt; line-height: 1.35; color: var(--soft); }
   .skill h3 { display: inline; font-size: 9pt; }
   .skill h3::after { content: ": "; }
@@ -345,15 +359,31 @@ aside .tags { margin-top: 8px; }
   .job ul:not(.web-only) li::before, .hx { content: ""; position: absolute; left: -11px; top: .52em; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
   .job ul:not(.web-only) li.pre::before, .hx { background: none; box-shadow: inset 0 0 0 1.1px var(--accent); }
   .hx { position: relative; display: inline-block; left: 0; top: -.05em; }
-  /* Projects: a slate rail runs down the bullet column so the colored hexes pop; the Experience timeline shares its color. */
-  .picks { position: relative; }
-  .picks::before { content: ""; position: absolute; left: 0; top: -3px; bottom: -3px; width: 13px; border-radius: 7px; background: var(--slate); }
-  .picks li { padding-left: 21px; }
-  .picks li::before { left: 1px; top: .22em; width: 11px; height: 12.7px; background: linear-gradient(160deg, color-mix(in srgb, var(--pc) 75%, #fff), var(--pc) 70%); }
-  .picks ul { list-style: none; padding-left: 10px; }
-  .picks li li { position: relative; padding: 0; }
-  .picks li li::before { display: block; left: -9px; top: .5em; width: 4px; height: 4px; border-radius: 50%; clip-path: none; background: var(--accent); }
-  .picks li li::after { display: none; }
+  /* Projects: the jobs' timeline format, each hex outline in the project's colour; descriptions only. */
+  .picks { gap: 5px; margin-left: 1px; background: linear-gradient(#c5cad6, #c5cad6) 5px 6px / 1px calc(100% - 12px) no-repeat; }
+  .picks li { padding-left: 18px; }
+  .picks li::before { left: 0; top: .12em; width: 11px; height: 12.7px; clip-path: none; background: var(--pm) center / contain no-repeat; }
+  .picks ul { display: none; }
+  /* Sidebar order in print: skills, then projects, then education. */
+  aside .skill { margin-bottom: 4px; }
+  aside .skill h3 { font-size: 8.4pt; }
+  aside { display: flex; flex-direction: column; }
+  aside .skills { order: 1; } aside .projects { order: 2; }
+  aside .projects, main > section:last-child { margin-bottom: 0; }
+  /* Header: the name large like the website, contact details stacked in the space to its right. */
+  .id { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label contact" "name contact"; column-gap: 16px; align-items: end; }
+  .id .label { grid-area: label; }
+  /* Sized so the name ends where the title line above it ends, as on the website. */
+  .id h1 { grid-area: name; font-size: 55.6pt; margin: 2px 0 0; }
+  .contact { grid-area: contact; flex-direction: column; align-items: flex-end; gap: 1px; font-size: 8.5pt; }
+  .contact > *::after { content: ""; display: inline-block; width: 9px; height: 9px; margin-left: 6px; vertical-align: -1px; background: center / contain no-repeat; }
+  ${CONTACT_ICONS}
+  /* Skills: a lightly tinted panel with slightly smaller type. */
+  .skill-list { background: color-mix(in srgb, var(--accent) 7%, #fff); border-radius: 4px; padding: 7px 9px 3px; }
+  aside .skill { font-size: 8pt; }
+  /* Education fits on one line. */
+  .education .edu { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
+  .education .edu h3 { font-size: 10pt; }
 }
 `;
 
@@ -498,12 +528,12 @@ const HEXFACE = `
 export function render(resume) {
   const b = resume.basics || {};
   const rules = [], top = header(b, rules);
-  // In print, skills sit under experience so the two columns end level.
-  const main = section("experience", "Experience", work(resume.work)) + section("skills print-only", "Skills", skillColumns(resume.skills));
+  // Print puts education under experience, where there is room; the sidebar keeps it on screen.
+  const main = section("experience", "Experience", work(resume.work)) + section("education print-only", "Education", education(resume.education));
   const side = [
     section("projects", "Projects", projects(resume.projects)),
-    section("skills web-only", "Skills", skills(resume.skills)),
-    section("education", "Education", education(resume.education)),
+    section("skills", "Skills", skills(resume.skills)),
+    section("education web-only", "Education", education(resume.education)),
   ].join("");
   return `<!doctype html>
 <html lang="en">

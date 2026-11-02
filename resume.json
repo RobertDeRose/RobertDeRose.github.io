@@ -59,7 +59,16 @@
           "preAI": true
         },
         "Rebuilt every device UI in React 19 with Entra ID sign-in via OIDC",
-        "Built a Rust/Tauri provisioning app used by all approved staff and contractors"
+        "Built a Rust/Tauri provisioning app used by all approved staff and contractors",
+        {
+          "text": "Built a YAML-driven GPIO REST service for CPU and I2C-expander GPIO",
+          "preAI": true
+        },
+        {
+          "text": "Built Copier project templates, incl. the Readfinity Core REST service base",
+          "preAI": true
+        },
+        "Introduced spec-driven AI development with gated code review"
       ],
       "highlightGroups": [
         {
@@ -105,7 +114,9 @@
         "Migrated all source code from Subversion to Git and set up GitLab CI/CD"
       ],
       "printHighlights": [
-        "Built one-step upgrades across major versions, saving techs hours to days"
+        "Built one-step upgrades across major versions, saving techs hours to days",
+        "Designed its migration engine for MySQL, SQL Server, and Actian Zen",
+        "Led a team of three developers integrating Orbeon Forms into the product"
       ]
     },
     {
@@ -122,7 +133,8 @@
       ],
       "printHighlights": [
         "Built Linode's OAuth 2.0 platform: SSO for its apps, a third-party OAuth provider, and SSH console login with 2FA",
-        "Built reproducible local dev environments with Vagrant and Docker Compose, opening contributions company-wide"
+        "Built reproducible local dev environments with Vagrant and Docker Compose, opening contributions company-wide",
+        "Championed and implemented OpenAPI 3 for Linode API v4"
       ]
     },
     {
@@ -136,7 +148,10 @@
         "Built its SOAP and REST APIs with Apache CXF and Jersey, hosted on an embedded Jetty server",
         "Built a metrics collection system for observability with MySQL, Hibernate, and Protocol Buffers"
       ],
-      "printHighlights": []
+      "printHighlights": [
+        "Built a distributed, fault-tolerant Diameter Signaling Controller on Cisco NCS",
+        "Built its SOAP and REST APIs, plus a metrics system for observability"
+      ]
     },
     {
       "name": "Amazon.com",
@@ -148,7 +163,9 @@
         "Developed an IP reputation system for Amazon Simple Email Service (SES) with Spring, Hibernate, and Amazon RDS",
         "Built email deliverability monitoring that tracked the reputation of Amazon's mail transfer agents (MTAs) by detecting when mail providers marked messages as junk"
       ],
-      "printHighlights": []
+      "printHighlights": [
+        "Built an IP reputation system and deliverability monitoring for Amazon SES"
+      ]
     }
   ],
   "projects": [
@@ -285,8 +302,7 @@
       "area": "Computer Engineering",
       "studyType": "BS",
       "startDate": "2008",
-      "endDate": "2012",
-      "score": "3.56 - Cum Laude"
+      "endDate": "2012"
     }
   ],
   "skills": [
@@ -305,9 +321,9 @@
       ]
     },
     {
-      "name": "Embedded Linux",
+      "name": "Linux",
       "keywords": [
-        "Debian packaging",
+        "OS packaging (deb, rpm)",
         "Ubuntu LTS",
         "systemd",
         "NixOS",
@@ -344,11 +360,13 @@
         "GitHub Actions",
         "self-hosted runners",
         "APT repositories",
+        "GoReleaser",
+        "nFPM",
+        "fpm",
+        "OCI images (Docker, Podman)",
+        "Docker Compose",
         "GitLab CI/CD",
         "Jenkins",
-        "Docker Compose",
-        "Podman",
-        "Apple container",
         "mise",
         "Copier"
       ]
@@ -384,7 +402,7 @@
       ]
     },
     {
-      "name": "AI-assisted development",
+      "name": "Agentic development",
       "keywords": [
         "Anthropic and OpenAI models (Claude Code, Codex)",
         "OpenCode",
