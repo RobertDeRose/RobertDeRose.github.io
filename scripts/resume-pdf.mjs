@@ -11,13 +11,14 @@ import { PDFDocument, PDFString, rgb, setCharacterSpacing } from "pdf-lib";
 import { chromium } from "playwright-core";
 import { stampContact } from "../site/js/stamp-contact.mjs";
 
-// Letter with the @page margins from resume-theme (6.5mm top/bottom, 12mm sides).
+// Letter with the @page margins from resume-theme (9mm top/bottom, 12mm sides).
 const MM = 72 / 25.4, PX = 0.75;
-const PAGE = { width: 612, height: 792, top: 6.5 * MM, left: 12 * MM };
+const PAGE = { width: 612, height: 792, top: 9 * MM, left: 12 * MM };
 // Tall enough that no scrollbar narrows the layout; the measured page must match the printed one.
 // Rounded up: at 725px Chrome already applies the theme's first print-zoom step, which the 725.29px PDF does not.
 const VIEWPORT = { width: Math.ceil((PAGE.width - 2 * PAGE.left) / PX), height: 2000 };
-const FONT = "site/fonts/RedHatDisplay-Regular-ascii.ttf";
+// ASCII subsets of the site fonts for stamping; the slot's own font family decides which (site-relative paths).
+const FONTS = { mono: "fonts/RedHatMono-Regular-ascii.ttf", sans: "fonts/RedHatDisplay-Regular-ascii.ttf" };
 
 const browser = await chromium.launch({ channel: process.env.CHROME_CHANNEL || "chrome" });
 const page = await browser.newPage({ viewport: VIEWPORT });
@@ -40,15 +41,16 @@ const marks = await page.evaluate(() => {
     el.append(end);
     const box = start.getBoundingClientRect(), style = getComputedStyle(el);
     const [r, g, b] = style.color.match(/[\d.]+/g).map(Number);
-    return { key: el.dataset.c, x: box.left, y: box.top, width: end.getBoundingClientRect().left - box.left, size: parseFloat(style.fontSize), color: [r / 255, g / 255, b / 255] };
+    // Print scales the page with CSS zoom; currentCSSZoom turns the font's CSS size into its printed size.
+    return { key: el.dataset.c, mono: /mono/i.test(style.fontFamily), x: box.left, y: box.top, width: end.getBoundingClientRect().left - box.left, size: parseFloat(style.fontSize) * (el.currentCSSZoom || 1), color: [r / 255, g / 255, b / 255] };
   });
 });
 const printed = await page.pdf({ preferCSSPageSize: true, printBackground: true });
 await browser.close();
 
-// Fail the build rather than publish a resume that spills onto a second page.
+// Fail the build rather than publish a resume longer than two pages.
 const doc = await PDFDocument.load(printed);
-if (doc.getPageCount() !== 1) throw new Error(`dist/resume.pdf has ${doc.getPageCount()} pages; trim the print content to fit one`);
+if (doc.getPageCount() > 2) throw new Error(`dist/resume.pdf has ${doc.getPageCount()} pages; trim the print content to fit two`);
 
 // Document properties a viewer or applicant tracking system shows, in place of headless Chrome's.
 const basics = JSON.parse(readFileSync("resume.json", "utf8")).basics || {};
@@ -60,6 +62,7 @@ doc.setProducer("Chrome and pdf-lib");
 const pdf = await doc.save({ updateFieldAppearances: false });
 
 const layout = {
+  font: marks.some((m) => m.mono) ? FONTS.mono : FONTS.sans,
   slots: marks.map((m) => ({
     key: m.key,
     x: +(PAGE.left + m.x * PX).toFixed(2),
@@ -76,7 +79,7 @@ console.log(`dist/resume.pdf: ${layout.slots.length} contact slot(s) reserved`);
 // Local only: the finished PDF with contact details, from the same stamping code.
 if (!process.env.CI && existsSync("private/contact.json")) {
   const contact = JSON.parse(readFileSync("private/contact.json", "utf8")).basics || {};
-  const done = await stampContact({ PDFDocument, PDFString, rgb, setCharacterSpacing, fontkit }, pdf, readFileSync(FONT), layout, contact);
+  const done = await stampContact({ PDFDocument, PDFString, rgb, setCharacterSpacing, fontkit }, pdf, readFileSync(`site/${layout.font}`), layout, contact);
   mkdirSync("private", { recursive: true });
   writeFileSync("private/Robert-DeRose-Resume.pdf", done);
   console.log("private/Robert-DeRose-Resume.pdf: contact details added");

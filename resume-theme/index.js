@@ -49,21 +49,11 @@ function date(s) {
 const initials = (n = "") => n.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 const range = (a, b) => (b && date(a) === date(b) ? date(a) : `${date(a)} – ${b ? date(b) : "Present"}`);
 
-// cls lets a job carry separate web and print bullets (printHighlights).
 const list = (items = [], cls = "") =>
   items.length ? `<ul${cls ? ` class="${cls}"` : ""}>${items.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>` : "";
-// Web bullets can be grouped under era headings (highlightGroups).
-const webBullets = (w) =>
-  w.highlightGroups
-    ? `<div class="web-only">${w.highlightGroups.map((g) => `<h4 class="era">${esc(g.title)}</h4>${list(g.highlights)}`).join("")}</div>`
-    : list(w.highlights, "web-only");
-// Print bullets are strings or {text, preAI}; pre-AI work gets an open bullet,
-// explained by a key on the job's date line.
-const printBullets = (items = []) => {
-  if (!items.length) return "";
-  const lis = items.map((h) => (typeof h === "string" ? `<li>${esc(h)}</li>` : `<li${h.preAI ? ' class="pre"' : ""}>${esc(h.text)}</li>`));
-  return `<ul class="print-only">${lis.join("")}</ul>`;
-};
+// Bullets can be grouped under era headings (highlightGroups). Screen and print show the same wording.
+const bullets = (w) =>
+  w.highlightGroups ? w.highlightGroups.map((g) => `<h4 class="era">${esc(g.title)}</h4>${list(g.highlights)}`).join("") : list(w.highlights);
 const tags = (items = []) => (items.length ? `<div class="tags">${items.map((k) => `<span>${esc(k)}</span>`).join("")}</div>` : "");
 const section = (id, title, body) => (body ? `<section class="${id}"><h2>${title}</h2>${body}</section>` : "");
 
@@ -89,8 +79,7 @@ function header(b = {}, rules = []) {
       ${b.url ? `<a class="btn ghost" href="${esc(b.url)}">Projects</a>` : ""}
     </div>
   </header>
-  ${b.summary ? `<div class="summary${b.printSummary ? " web-only" : ""}">${paras(b.summary)}</div>` : ""}
-  ${b.printSummary ? `<div class="summary print-only">${paras(b.printSummary)}</div>` : ""}`;
+  ${b.summary ? `<div class="summary">${paras(b.summary)}</div>` : ""}`;
 }
 
 const work = (items = []) =>
@@ -102,8 +91,7 @@ const work = (items = []) =>
       <h3>${esc(w.position)} <span>${w.url ? `<a href="${esc(w.url)}">${esc(w.name)}</a>` : esc(w.name)}</span></h3>
       ${w.location ? `<div class="where">${esc(w.location)}</div>` : ""}
       ${w.summary ? `<p>${esc(w.summary)}</p>` : ""}
-      ${w.printHighlights ? webBullets(w) + printBullets(w.printHighlights) : list(w.highlights)}
-      ${(w.printHighlights || []).some((h) => h.preAI) ? `<p class="key print-only"><i class="hx"></i> Built before AI coding agents</p>` : ""}
+      ${bullets(w)}
     </article>`,
     )
     .join("");
@@ -128,7 +116,7 @@ const iconUrl = (name, color = "#3b5fd6") =>
 const CONTACT_ICONS = [
   [".contact .pc[data-c=email]", "email"], [".contact .pc[data-c=phone]", "phone"], [".contact a.site", "site"],
   [".contact a[href*='linkedin.com']", "linkedin"], [".contact a[href*='://github.com']", "github"],
-].map(([sel, name]) => `${sel}::after { background-image: ${iconUrl(name)}; }`).join("\n");
+].map(([sel, name]) => `${sel}::before { background-image: ${iconUrl(name)}; }`).join("\n");
 
 const projects = (items = []) =>
   items.length
@@ -138,7 +126,6 @@ const projects = (items = []) =>
       <li${p.printOnly ? ' class="print-only"' : ""} style="--pc:${esc(p.color || PALETTE[i % PALETTE.length])};--pm:${hexOutline(p.color || PALETTE[i % PALETTE.length])}">
         <h3>${p.url ? `<a href="${esc(p.url)}">${esc(p.name)}</a>` : esc(p.name)}</h3>
         ${p.description ? `<p>${esc(p.description)}</p>` : ""}
-        ${list(p.printHighlights, "print-only")}
       </li>`,
         )
         .join("")}</ul>`
@@ -280,110 +267,55 @@ aside .tags { margin-top: 8px; }
 
 /* Print and PDF: light paper, compact type, no lattice or buttons. */
 /* Print engines lay Letter out at different widths (desktop Chrome and Firefox 725px, Safari ~677px, iOS browsers in between).
-   Container queries step the zoom down with the real width so the layout, and the one-page fit, match everywhere. */
+   Container queries step the zoom down with the real width so the layout matches everywhere. */
 @media print { .page { container-type: inline-size; } ${PRINT_ZOOM} }
-@page { size: Letter; margin: 6.5mm 12mm; }
+/* Print is the website on white paper: the same components and colours in one column, drawn at the
+   website's sizes and scaled to the page, up to two pages. */
+@page { size: Letter; margin: 9mm 12mm; }
 @media print {
-  :root { --bg: #fff; --panel: #fff; --line: #d9dde5; --fg: #0f1320; --muted: #5d6576; --soft: #2a3040; --accent: #3b5fd6; color-scheme: light; }
-  body { font-size: 9.4pt; line-height: 1.33; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  canvas, .actions, .reveal { display: none; }
-  .pc { display: inline; }
-  .photo.mosaic #avatar { opacity: 1; transition: none; }
-  .page { padding: 0; max-width: none; }
-  .top { grid-template-columns: 1fr; gap: 18px; }
-  .photo { display: none; }
-  .photo b { font-size: 30pt; }
-  h1 { font-size: 40pt; margin: 2px 0 6px; }
-  .label { font-size: 8pt; }
-  .contact { font: 8pt var(--sans); gap: 2px 9px; }
-  .contact a { text-decoration: none; }
-  /* The summary sits in the same tinted panel as the skills, a point smaller than before. */
-  .summary { font-size: 9pt; margin: 8px 0 0; max-width: none; background: color-mix(in srgb, var(--accent) 7%, #fff); border-radius: 4px; padding: 7px 10px; }
-  .summary p { margin: 0 0 4px; }
-  .summary p:last-child { margin-bottom: 0; }
-  .cols { grid-template-columns: minmax(0, 1fr) 230px; gap: 20px; margin-top: 12px; }
-  section { margin-bottom: 9px; }
-  h2 { font-size: 8pt; margin-bottom: 10px; }
-  h3 { font-size: 11pt; }
-  .when, .where { font-size: 8.5pt; }
-  .job { padding-bottom: 9px; }
-  .web-only { display: none; }
+  :root { --bg: #fff; --panel: #fff; --line: #d5dae4; --fg: #0f1320; --muted: #5d6576; --soft: #2a3040; --accent: #3b5fd6; color-scheme: light; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  canvas, .actions, .reveal, .photo, .web-only { display: none; }
   .print-only { display: block; }
-  .job p.key { margin: 2px 0 0; font: 7.5pt var(--mono); color: var(--muted); }
-  .contact .print-only { display: inline; }
+  .contact .print-only, .pc { display: inline; }
   /* The PDF build lays contact details out but leaves them blank; the download button writes them in. */
   .pdf-build .pc > span { visibility: hidden; }
-  .job h3, .job .when { break-after: avoid; }
-  .job:not(:has(ul:not(.web-only))) { padding-bottom: 6px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
-  .job:not(:has(ul:not(.web-only))) .when { order: 2; }
-  .job:not(:has(ul:not(.web-only))) .where { order: 3; }
-  .job:not(:has(ul:not(.web-only))) .where { display: none; }
-  li { break-inside: avoid; }
-  .job p { margin: 3px 0; }
-  ul { margin-top: 3px; }
-  li { margin-bottom: 1px; }
-  .tags { margin-top: 5px; gap: 4px; }
-  .tags span { font-size: 7.5pt; padding: 0 5px; color: var(--soft); }
-  .skill { break-inside: avoid; margin-bottom: 6px; font-size: 8.5pt; line-height: 1.35; color: var(--soft); }
-  .skill h3 { display: inline; font-size: 9pt; }
-  .skill h3::after { content: ": "; }
-  .skill .tags { display: inline; margin: 0; }
-  .skill .tags span { font: inherit; border: 0; padding: 0; color: inherit; }
-  .skill .tags span:not(:last-child)::after { content: ", "; }
-  .picks { gap: 4px; }
-  .edu p, .edu .when { font-size: 8.5pt; margin: 0; }
-  .picks li { padding-left: 15px; }
-  .picks li::before { width: 8px; height: 9px; }
-  .picks h3 { font-size: 9.5pt; }
-  .picks h3 a { color: var(--fg); }
-  .picks p { font-size: 8.5pt; }
-  .picks ul { margin: 1px 0 0; padding-left: 11px; font-size: 8.3pt; line-height: 1.3; color: var(--soft); }
-  .picks li li { padding: 0; margin: 0 0 1px; }
-  .picks li li::before { display: none; }
-  .picks li li::marker { color: var(--pc); }
-  .skill h3, aside .edu h3 { font-size: 9.5pt; }
-  a { text-decoration: none; }
-
-  /* Print follows the website: hexagons mark sections and jobs, bullets are round, all in the accent blue. */
-  :root { --hex: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); --rim: linear-gradient(160deg, #8a92a3, #1d2230 75%); --slate: #4a5264; }
-  /* Odd widths so the hexes centre exactly on the 1px timeline line once Chrome snaps them to whole pixels. */
-  h2::before { width: 11px; height: 12.7px; margin-left: 1px; background: var(--accent); }
-  h2::after { background: linear-gradient(90deg, #8d95a6, #e4e7ed 60%, transparent); }
-  /* Timeline markers: a hex outline drawn as SVG (sharp points), sitting on the line as on the website. */
-  .job::before { left: -5px; top: 2.4px; width: 11px; height: 12.70px; clip-path: none; box-shadow: none; background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 12.702'><polygon points='5.500,0.550 10.524,3.450 10.524,9.251 5.500,12.152 0.476,9.251 0.476,3.450' fill='%23fff' stroke='%233b5fd6' stroke-width='1.1' stroke-linejoin='miter'/></svg>") center / contain no-repeat; }
-  .job::after { display: none; }
-  /* The line is a background like the marker, so both land on the same pixel grid and stay centred. */
-  .job { border-left: 0; padding-left: 29px; background: linear-gradient(#c5cad6, #c5cad6) 0 0 / 1px 100% no-repeat; }
-  .job ul:not(.web-only) { list-style: none; padding-left: 14px; }
-  .job ul:not(.web-only) li { position: relative; }
-  .job ul:not(.web-only) li::before, .hx { content: ""; position: absolute; left: -11px; top: .52em; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
-  .job ul:not(.web-only) li.pre::before, .hx { background: none; box-shadow: inset 0 0 0 1.1px var(--accent); }
-  .hx { position: relative; display: inline-block; left: 0; top: -.05em; }
-  /* Projects: the jobs' timeline format, each hex outline in the project's colour; descriptions only. */
-  .picks { gap: 5px; margin-left: 1px; background: linear-gradient(#c5cad6, #c5cad6) 5px 6px / 1px calc(100% - 12px) no-repeat; }
-  .picks li { padding-left: 18px; }
-  .picks li::before { left: 0; top: .12em; width: 11px; height: 12.7px; clip-path: none; background: var(--pm) center / contain no-repeat; }
-  .picks ul { display: none; }
-  /* Sidebar order in print: skills, then projects, then education. */
-  aside .skill { margin-bottom: 4px; }
-  aside .skill h3 { font-size: 8.4pt; }
-  aside { display: flex; flex-direction: column; }
-  aside .skills { order: 1; } aside .projects { order: 2; }
-  aside .projects, main > section:last-child { margin-bottom: 0; }
-  /* Header: the name large like the website, contact details stacked in the space to its right. */
-  .id { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label contact" "name contact"; column-gap: 16px; align-items: end; }
-  .id .label { grid-area: label; }
+  .page { padding: 0; max-width: none; zoom: .72; }
+  .top { grid-template-columns: 1fr; }
   /* Sized so the name ends where the title line above it ends, as on the website. */
-  .id h1 { grid-area: name; font-size: 55.6pt; margin: 2px 0 0; }
-  .contact { grid-area: contact; flex-direction: column; align-items: flex-end; gap: 1px; font-size: 8.5pt; }
-  .contact > *::after { content: ""; display: inline-block; width: 9px; height: 9px; margin-left: 6px; vertical-align: -1px; background: center / contain no-repeat; }
+  h1 { font-size: 90.8px; }
+  .summary { max-width: none; margin-top: 18px; }
+  /* Block layout: Chrome won't break a page inside a grid row, so a grid pushed the sidebar to a new page whole. */
+  .cols { display: block; margin-top: 22px; }
+  /* Paper spacing: the website's rhythm, tightened. */
+  section { margin-bottom: 20px; }
+  .job { padding-bottom: 12px; }
+  .job p { margin: 5px 0; }
+  li { margin-bottom: 2px; }
+  .era { margin: 10px 0 4px; }
+  aside .skill { margin-bottom: 4px; }
+  aside .tags { margin-top: 4px; gap: 4px; }
+  aside .tags span { padding: 0 6px; }
+  .picks { gap: 10px 40px; }
+  .edu { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 14px; }
+  .edu p { margin: 0; }
+  /* Skills and projects use the full width in two columns. */
+  .skill-list, .picks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 40px; }
+  .skill-list { grid-template-columns: 1fr 1fr 1fr; gap: 6px 28px; }
+  /* Older, shorter jobs drop the location line on paper. */
+  .job:nth-last-child(-n+2) .where { display: none; }
+  .picks h3 a { color: var(--fg); }
+  /* Contact: one row with a small icon before each item. */
+  .contact > *::before { content: ""; display: inline-block; width: 13px; height: 13px; margin-right: 7px; vertical-align: -2px; background: center / contain no-repeat; }
   ${CONTACT_ICONS}
-  /* Skills: a lightly tinted panel with slightly smaller type. */
-  .skill-list { background: color-mix(in srgb, var(--accent) 7%, #fff); border-radius: 4px; padding: 7px 9px 3px; }
-  aside .skill { font-size: 8pt; }
-  /* Education fits on one line. */
-  .education .edu { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
-  .education .edu h3 { font-size: 10pt; }
+  /* Page breaks: keep titles with what follows, and never split a bullet or skill group. */
+  .job h3, .job .when, .job .where, .job > p, .era, h2 { break-after: avoid; }
+  li, .skill, .picks > li { break-inside: avoid; }
+  a { text-decoration: none; }
+  /* Every block positioned, so Chrome writes the PDF's text in reading order for text extraction and ATS parsing. */
+  .top, .summary, main, aside, section { position: relative; }
+  /* Normal letter spacing keeps word spaces in extracted text (tight tracking splits words into single glyphs). */
+  h3 { letter-spacing: normal; }
 }
 `;
 
@@ -405,8 +337,9 @@ document.getElementById("pdf")?.addEventListener("click", async (ev) => {
   const get = (url, as) => fetch(url).then((r) => { if (!r.ok) throw new Error(url); return r[as](); });
   b.disabled = true;
   try {
-    const [pdf, font, layout] = await Promise.all([
-      get("resume.pdf", "arrayBuffer"), get("fonts/RedHatDisplay-Regular-ascii.ttf", "arrayBuffer"), get("resume-pdf.json", "json"),
+    const layout = await get("resume-pdf.json", "json");
+    const [pdf, font] = await Promise.all([
+      get("resume.pdf", "arrayBuffer"), get(layout.font, "arrayBuffer"),
       window.PDFLib || load("js/vendor/pdf-lib.min.js"), window.fontkit || load("js/vendor/fontkit.umd.min.js"),
     ]);
     const { stampContact } = await import("./js/stamp-contact.mjs");
@@ -528,12 +461,11 @@ const HEXFACE = `
 export function render(resume) {
   const b = resume.basics || {};
   const rules = [], top = header(b, rules);
-  // Print puts education under experience, where there is room; the sidebar keeps it on screen.
-  const main = section("experience", "Experience", work(resume.work)) + section("education print-only", "Education", education(resume.education));
+  const main = section("experience", "Experience", work(resume.work));
   const side = [
     section("projects", "Projects", projects(resume.projects)),
     section("skills", "Skills", skills(resume.skills)),
-    section("education web-only", "Education", education(resume.education)),
+    section("education", "Education", education(resume.education)),
   ].join("");
   return `<!doctype html>
 <html lang="en">
